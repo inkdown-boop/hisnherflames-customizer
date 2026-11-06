@@ -58,27 +58,27 @@
             100% { transform: translateY(-250px); }
         }
 
-        /* Video Stage Celestial Neon "Thank You!" Backdrop */
-        .video-thank-you {
+        /* Horizontal Neon Floating "Thank You!" on Celestial Right Side (Video Stage Only) */
+        .celestial-video-thankyou {
             position: fixed;
-            right: 50px;
+            right: 40px;
             top: 50%;
             transform: translateY(-50%);
             font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, sans-serif;
-            font-size: 42px;
+            font-size: 38px;
             letter-spacing: 2px;
             color: #ffffff;
-            text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-pink), 0 0 45px #ffffff;
+            text-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-cyan), 0 0 45px #ffffff;
             pointer-events: none;
             z-index: 5;
             writing-mode: horizontal-tb;
-            animation: thankPulse 2.5s infinite alternate;
+            animation: videoThankPulse 2.5s infinite alternate;
             display: none;
         }
 
-        @keyframes thankPulse {
-            0% { opacity: 0.5; transform: translateY(-50%) scale(0.98); text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px #ffffff; }
-            100% { opacity: 1; transform: translateY(-50%) scale(1.04); text-shadow: 0 0 20px var(--neon-cyan), 0 0 35px var(--neon-pink), 0 0 50px #ffffff; }
+        @keyframes videoThankPulse {
+            0% { opacity: 0.6; transform: translateY(-50%) scale(0.96); text-shadow: 0 0 10px var(--neon-pink), 0 0 20px #ffffff; }
+            100% { opacity: 1; transform: translateY(-50%) scale(1.05); text-shadow: 0 0 20px var(--neon-pink), 0 0 35px var(--neon-cyan), 0 0 50px #ffffff; }
         }
 
         .app-container {
@@ -132,7 +132,7 @@
             box-shadow: 0 0 35px rgba(0, 243, 255, 0.8);
         }
 
-        /* Centered Branding & Tagline */
+        /* Centered Branding & Tagline Under Start Button */
         .cover-brand-box {
             margin-top: 18px;
             text-align: center;
@@ -384,7 +384,8 @@
 <body>
 
     <div class="stars"></div>
-    <div class="video-thank-you" id="videoThankYou">Thank You!</div>
+    <!-- Floating Celestial Neon Thank You for Video Stage -->
+    <div class="celestial-video-thankyou" id="videoThankYou">Thank You!</div>
 
     <div class="app-container">
         <!-- Navigation Tabs -->
@@ -645,10 +646,10 @@
             let bx = targetBox.x, by = targetBox.y, bw = targetBox.w, bh = targetBox.h;
             let offset = 18 + arrowPulse;
 
-            // Template 1: Moved 15mm right (+60px) and 15mm down (+60px)
-            // Template 2: Moved 5mm up (-20px)
-            let offsetX = (currentStage === 2) ? 60 : 0;
-            let offsetY = (currentStage === 2) ? 60 : (currentStage === 3 ? -20 : 0);
+            // Template 1: Moved 20mm right (+75px) and 15mm down (+60px)
+            // Template 2: Moved 10mm up (-40px)
+            let offsetX = (currentStage === 2) ? 75 : 0;
+            let offsetY = (currentStage === 2) ? 60 : (currentStage === 3 ? -40 : 0);
 
             let targetX = bx + offsetX;
             let targetY = by + offsetY;
@@ -674,7 +675,7 @@
             ctx.restore();
         }
 
-        // Anchored Flame & Candle Smoke (No Thank You on canvas)
+        // Anchored Flame & Candle Smoke (Canvas Thank You 100% REMOVED)
         function renderClosingEffects() {
             ctx.save();
             let fx = 420;
@@ -760,7 +761,7 @@
                 video.style.display = 'block';
                 video.play();
                 inchHud.classList.add('hidden');
-                videoThankYou.style.display = 'block'; // Triggers pulsating horizontal celestial Thank You
+                videoThankYou.style.display = 'block'; // Shows neon Thank You in celestial background during MP4 video
                 playVictoryChime();
             }
         }
