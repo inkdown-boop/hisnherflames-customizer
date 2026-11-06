@@ -58,28 +58,6 @@
             100% { transform: translateY(-250px); }
         }
 
-        /* Horizontal Neon Pink & White Cursive Brand Backdrop in Side Flank */
-        .celestial-brand-backdrop {
-            position: fixed;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, sans-serif;
-            font-size: 24px;
-            letter-spacing: 2px;
-            color: #ffffff;
-            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px #ffffff;
-            pointer-events: none;
-            z-index: 1;
-            writing-mode: horizontal-tb;
-            animation: brandPulse 3s infinite alternate;
-        }
-
-        @keyframes brandPulse {
-            0% { opacity: 0.7; text-shadow: 0 0 8px var(--neon-pink), 0 0 15px #ffffff; }
-            100% { opacity: 1; text-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-pink), 0 0 35px #ffffff; }
-        }
-
         .app-container {
             position: relative;
             z-index: 10;
@@ -114,7 +92,7 @@
         }
 
         .start-btn {
-            margin-top: 25px; /* Sits cleanly below cover box in celestial space */
+            margin-top: 25px;
             background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
             color: #fff;
             border: 2px solid var(--neon-cyan);
@@ -129,6 +107,23 @@
         .start-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 0 35px rgba(0, 243, 255, 0.8);
+        }
+
+        /* Centered Branding Under Start Button */
+        .cover-brand {
+            margin-top: 15px;
+            font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, sans-serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px #ffffff;
+            text-align: center;
+            animation: brandPulse 3s infinite alternate;
+        }
+
+        @keyframes brandPulse {
+            0% { opacity: 0.7; text-shadow: 0 0 8px var(--neon-pink), 0 0 15px #ffffff; }
+            100% { opacity: 1; text-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-pink), 0 0 35px #ffffff; }
         }
 
         /* Stage Navigation Tabs */
@@ -349,7 +344,6 @@
 <body>
 
     <div class="stars"></div>
-    <div class="celestial-brand-backdrop">HisNHerFlames.com</div>
 
     <div class="app-container">
         <!-- Navigation Tabs -->
@@ -360,10 +354,11 @@
             <button class="tab-btn" onclick="switchStage(4)">4. Closing</button>
         </div>
 
-        <!-- Cover Welcome Landing Page with Button Shifted Down -->
+        <!-- Cover Welcome Landing Page Container with Centered Branding Below -->
         <div class="cover-container" id="coverContainer">
             <div class="cover-view"></div>
             <button class="start-btn" id="startBtn">✨ Start Designing ✨</button>
+            <div class="cover-brand">HisNHerFlames.com</div>
         </div>
 
         <!-- Main Canvas Viewport -->
@@ -408,7 +403,7 @@
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
                 <!-- Replace with your actual Web3Forms access key -->
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -556,7 +551,6 @@
             switchStage(1);
         }
 
-        // Bind button click listener directly
         document.getElementById('startBtn').addEventListener('click', startDesigning);
 
         function mainLoop() {
@@ -576,6 +570,7 @@
                     ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
                 }
 
+                // Render User Image on Templates 1 & 2 (Clean, No Ghost Boxes)
                 if (currentStage >= 2 && userImg) {
                     ctx.save();
                     let trailGlow = isSnapped ? 20 : (isOutOfBounds ? 15 : 8);
@@ -585,49 +580,90 @@
                     ctx.restore();
                 }
 
+                // Render Pulsating Guide Arrows pointing inward to target box on T1 & T2
                 if (currentStage >= 2) {
-                    ctx.save();
-                    let herePulse = 15 + Math.sin(pulseTimer * 3) * 8;
-                    ctx.shadowColor = '#00f3ff';
-                    ctx.shadowBlur = herePulse;
-                    ctx.strokeStyle = 'rgba(0, 243, 255, 0.4)';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(320, 420, 180, 80);
-                    ctx.restore();
+                    renderGuideArrows();
                 }
             }
 
             requestAnimationFrame(mainLoop);
         }
 
+        // Pulsating Guide Arrows Pointing Inward to Target Drop Zone
+        function renderGuideArrows() {
+            ctx.save();
+            let arrowPulse = 5 + Math.sin(pulseTimer * 4) * 4;
+            ctx.strokeStyle = '#00f3ff';
+            ctx.fillStyle = '#00f3ff';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#00f3ff';
+            ctx.shadowBlur = 10;
+
+            let bx = targetBox.x, by = targetBox.y, bw = targetBox.w, bh = targetBox.h;
+            let offset = 18 + arrowPulse;
+
+            // Top Arrow pointing Down
+            ctx.beginPath();
+            ctx.moveTo(bx, by - bh/2 - offset - 10);
+            ctx.lineTo(bx, by - bh/2 - offset);
+            ctx.moveTo(bx - 6, by - bh/2 - offset - 6);
+            ctx.lineTo(bx, by - bh/2 - offset);
+            ctx.lineTo(bx + 6, by - bh/2 - offset - 6);
+            ctx.stroke();
+
+            // Bottom Arrow pointing Up
+            ctx.beginPath();
+            ctx.moveTo(bx, by + bh/2 + offset + 10);
+            ctx.lineTo(bx, by + bh/2 + offset);
+            ctx.moveTo(bx - 6, by + bh/2 + offset + 6);
+            ctx.lineTo(bx, by + bh/2 + offset);
+            ctx.lineTo(bx + 6, by + bh/2 + offset + 6);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Realistic Flame: Still Root at Tip, Swaying Upper Plume + Multi-Tones & Smoke
         function renderClosingEffects() {
             ctx.save();
-            let fx = 420 + flameSway;
-            let fy = 615;
+            let fx = 420; // Fixed root X on lighter tip
+            let fy = 615; // Lowered by 3-5mm to clear fingernail
 
-            let grad = ctx.createRadialGradient(fx, fy - 30, 5, fx, fy - 30, 70);
-            grad.addColorStop(0, 'rgba(255, 165, 0, 0.6)');
-            grad.addColorStop(0.5, 'rgba(255, 69, 0, 0.2)');
+            // Outer Neon Glow Aura
+            let grad = ctx.createRadialGradient(fx, fy - 25, 5, fx, fy - 25, 75);
+            grad.addColorStop(0, 'rgba(255, 165, 0, 0.5)');
+            grad.addColorStop(0.5, 'rgba(255, 69, 0, 0.15)');
             grad.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.fillStyle = grad;
             ctx.beginPath();
-            ctx.arc(fx, fy - 30, 70, 0, Math.PI * 2);
+            ctx.arc(fx, fy - 25, 75, 0, Math.PI * 2);
             ctx.fill();
 
+            // Outer Orange Plume (Swaying ONLY at top)
+            ctx.fillStyle = 'rgba(255, 120, 0, 0.85)';
+            ctx.beginPath();
+            ctx.moveTo(fx - 12, fy); // Still Root
+            ctx.bezierCurveTo(fx - 15, fy - 35, fx + flameSway - 25, fy - 70, fx + flameSway, fy - 95); // Swaying Tip
+            ctx.bezierCurveTo(fx + flameSway + 25, fy - 70, fx + 15, fy - 35, fx + 12, fy); // Still Root
+            ctx.fill();
+
+            // Inner Bright Yellow Core (Swaying Upper Body)
             ctx.fillStyle = '#ffcc00';
             ctx.beginPath();
-            ctx.moveTo(fx, fy - 80);
-            ctx.bezierCurveTo(fx + 25 + flameSway*0.5, fy - 40, fx + 15, fy - 10, fx, fy);
-            ctx.bezierCurveTo(fx - 15, fy - 10, fx - 25 - flameSway*0.5, fy - 40, fx, fy - 80);
+            ctx.moveTo(fx - 7, fy); // Still Root
+            ctx.bezierCurveTo(fx - 10, fy - 30, fx + flameSway*0.7 - 15, fy - 55, fx + flameSway*0.7, fy - 75);
+            ctx.bezierCurveTo(fx + flameSway*0.7 + 15, fy - 55, fx + 10, fy - 30, fx + 7, fy); // Still Root
             ctx.fill();
 
+            // White-Hot Inner Center
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.moveTo(fx, fy - 60);
-            ctx.bezierCurveTo(fx + 8, fy - 35, fx + 5, fy - 20, fx, fy - 10);
-            ctx.bezierCurveTo(fx - 5, fy - 20, fx - 8, fy - 35, fx, fy - 60);
+            ctx.moveTo(fx - 3, fy); // Still Root
+            ctx.bezierCurveTo(fx - 5, fy - 20, fx + flameSway*0.4 - 8, fy - 40, fx + flameSway*0.4, fy - 55);
+            ctx.bezierCurveTo(fx + flameSway*0.4 + 8, fy - 40, fx + 5, fy - 20, fx + 3, fy); // Still Root
             ctx.fill();
 
+            // Candle Smoke Rising
             ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
             for (let i = 0; i < 3; i++) {
                 let sx = 280 + i * 120 + Math.sin(pulseTimer + i) * 15;
