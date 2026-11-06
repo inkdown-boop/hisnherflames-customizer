@@ -58,10 +58,10 @@
             100% { transform: translateY(-250px); }
         }
 
-        /* Horizontal Neon Floating "Thank You!" on Celestial Right Side (Video Stage Only) */
+        /* Floating Celestial Neon Thank You (Shifted 35mm left for optimal placement) */
         .celestial-video-thankyou {
             position: fixed;
-            right: 40px;
+            right: 180px; /* Shifted left by ~35mm */
             top: 50%;
             transform: translateY(-50%);
             font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, sans-serif;
@@ -384,7 +384,7 @@
 <body>
 
     <div class="stars"></div>
-    <!-- Floating Celestial Neon Thank You for Video Stage -->
+    <!-- Floating Celestial Neon Thank You for Video Stage (Shifted Left 35mm) -->
     <div class="celestial-video-thankyou" id="videoThankYou">Thank You!</div>
 
     <div class="app-container">
@@ -448,7 +448,7 @@
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
                 <!-- Replace with your actual Web3Forms access key -->
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -633,7 +633,7 @@
             requestAnimationFrame(mainLoop);
         }
 
-        // Render Synced Guide Arrows
+        // Render Synced Guide Arrows (Template 1 shifted +20mm right horizontally)
         function renderGuideArrows() {
             ctx.save();
             let arrowPulse = 5 + Math.sin(pulseTimer * 4) * 4;
@@ -646,9 +646,9 @@
             let bx = targetBox.x, by = targetBox.y, bw = targetBox.w, bh = targetBox.h;
             let offset = 18 + arrowPulse;
 
-            // Template 1: Moved 20mm right (+75px) and 15mm down (+60px)
+            // Template 1: Moved 20mm right (+80px) and 15mm down (+60px)
             // Template 2: Moved 10mm up (-40px)
-            let offsetX = (currentStage === 2) ? 75 : 0;
+            let offsetX = (currentStage === 2) ? 155 : 0; // +20mm right (+80px added to previous 75px offset = 155px)
             let offsetY = (currentStage === 2) ? 60 : (currentStage === 3 ? -40 : 0);
 
             let targetX = bx + offsetX;
