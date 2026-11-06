@@ -423,7 +423,7 @@
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
                 <!-- Replace with your actual Web3Forms access key -->
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -733,3 +733,175 @@
                 inchHud.classList.add('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
+            }
+        }
+        window.switchStage = switchStage;
+
+        function nextStage() {
+            if (currentStage < 4) {
+                switchStage(currentStage + 1);
+            } else {
+                canvas.style.display = 'none';
+                video.style.display = 'block';
+                video.play();
+                inchHud.classList.add('hidden');
+                playVictoryChime();
+            }
+        }
+        window.nextStage = nextStage;
+
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    userImg = new Image();
+                    userImg.onload = function() {
+                        imgW = 220;
+                        imgH = 240;
+                        imgX = targetBox.x;
+                        imgY = targetBox.y;
+                        document.getElementById('imgWidthSlider').value = imgW;
+                        document.getElementById('imgHeightSlider').value = imgH;
+                        playCoinSound();
+                    };
+                    userImg.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function updateImageWidth(val) {
+            imgW = parseInt(val);
+            let inchesW = (imgW / 88).toFixed(1);
+            document.getElementById('imgWVal').innerText = inchesW + '"';
+            checkBounds();
+        }
+        window.updateImageWidth = updateImageWidth;
+
+        function updateImageHeight(val) {
+            imgH = parseInt(val);
+            let inchesH = (imgH / 88).toFixed(1);
+            document.getElementById('imgHVal').innerText = inchesH + '"';
+            checkBounds();
+        }
+        window.updateImageHeight = updateImageHeight;
+
+        function checkBounds() {
+            let iw = (imgW / 88).toFixed(1);
+            let ih = (imgH / 88).toFixed(1);
+            document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
+
+            let dist = Math.hypot(imgX - targetBox.x, imgY - targetBox.y);
+            if (dist < 40) {
+                if (!isSnapped) {
+                    playSnapPop();
+                    isSnapped = true;
+                }
+                isOutOfBounds = false;
+                inchHud.className = 'inch-hud target-met';
+            } else if (imgX < 100 || imgX > 740 || imgY < 100 || imgY > 1020) {
+                if (!isOutOfBounds) {
+                    playWarningBuzz();
+                    isOutOfBounds = true;
+                }
+                isSnapped = false;
+                inchHud.className = 'inch-hud out-of-bounds';
+            } else {
+                isSnapped = false;
+                isOutOfBounds = false;
+                inchHud.className = 'inch-hud';
+            }
+        }
+
+        function toggleBoxLock() {
+            isBoxLocked = !isBoxLocked;
+            const btn = document.getElementById('lockBtn');
+            btn.innerText = isBoxLocked ? '🔒 Box: Locked' : '🔓 Box: Unlocked';
+            playCoinSound();
+        }
+        window.toggleBoxLock = toggleBoxLock;
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+            if (!isBoxLocked && Math.abs(mouseX - targetBox.x) < targetBox.w/2 && Math.abs(mouseY - targetBox.y) < targetBox.h/2) {
+                isDraggingBox = true;
+            } else {
+                isDraggingImage = true;
+            }
+            startX = mouseX;
+            startY = mouseY;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingImage && !isDraggingBox) return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+            const dx = mouseX - startX;
+            const dy = mouseY - startY;
+
+            if (isDraggingBox) {
+                targetBox.x += dx;
+                targetBox.y += dy;
+            } else if (isDraggingImage) {
+                imgX += dx;
+                imgY += dy;
+                checkBounds();
+            }
+            startX = mouseX;
+            startY = mouseY;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDraggingImage && Math.hypot(imgX - targetBox.x, imgY - targetBox.y) < 30) {
+                imgX = targetBox.x;
+                imgY = targetBox.y;
+                playSnapPop();
+                isSnapped = true;
+            }
+            isDraggingImage = false;
+            isDraggingBox = false;
+        });
+
+        function openOrderModal() { document.getElementById('orderModal').style.display = 'flex'; }
+        window.openOrderModal = openOrderModal;
+        function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
+        window.closeOrderModal = closeOrderModal;
+
+        function submitOrder(event) {
+            event.preventDefault();
+            const form = document.getElementById('orderForm');
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: json
+            })
+            .then(async (response) => {
+                let jsonRes = await response.json();
+                if (response.status === 200) {
+                    playVictoryChime();
+                    alert("🎉 Success! Your custom lighter wrap order has been submitted successfully to HisNHerFlames.com!");
+                    closeOrderModal();
+                } else {
+                    alert(jsonRes.message || "Something went wrong. Please check your Web3Forms access key.");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Submission failed. Please check your internet connection.");
+            });
+        }
+        window.submitOrder = submitOrder;
+
+        window.onload = initAssets;
+    </script>
+</body>
+</html>
