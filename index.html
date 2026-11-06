@@ -10,7 +10,7 @@
             --neon-cyan: #00f3ff;
             --neon-purple: #b000ff;
             --bg-space: #070712;
-            --panel-bg: rgba(15, 15, 30, 0.85);
+            --panel-bg: rgba(15, 15, 30, 0.88);
             --border-glow: rgba(0, 243, 255, 0.4);
         }
 
@@ -33,7 +33,7 @@
             padding: 20px 0;
         }
 
-        /* Celestial Starry Background */
+        /* Celestial Starry Background with Floating Brand Backdrop */
         .stars {
             position: fixed;
             top: 0;
@@ -47,15 +47,31 @@
                 radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
                 radial-gradient(2px 2px at 160px 120px, var(--neon-pink), rgba(0,0,0,0));
             background-repeat: repeat;
-            background-size: 200px 200px;
-            opacity: 0.6;
-            animation: twinkle 8s infinite linear;
+            background-size: 250px 250px;
+            opacity: 0.7;
+            animation: twinkle 10s infinite linear;
             z-index: 0;
         }
 
         @keyframes twinkle {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-200px); }
+            100% { transform: translateY(-250px); }
+        }
+
+        /* Floating Cursive Brand Backdrop in Side Flanks */
+        .celestial-brand-backdrop {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, sans-serif;
+            font-size: 28px;
+            letter-spacing: 3px;
+            color: rgba(0, 243, 255, 0.25);
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.3), 0 0 30px rgba(255, 42, 133, 0.15);
+            pointer-events: none;
+            z-index: 1;
+            white-space: nowrap;
         }
 
         .app-container {
@@ -69,7 +85,53 @@
             padding: 0 15px;
         }
 
-        /* Stage Navigation Tabs */
+        /* Cover Welcome Landing Page */
+        .cover-view {
+            width: 100%;
+            max-width: 420px;
+            height: 560px;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 42, 133, 0.3), inset 0 0 25px rgba(0, 243, 255, 0.2);
+            border: 2px solid var(--neon-pink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: #fff;
+            border: 2px solid var(--neon-cyan);
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 42, 133, 0.6);
+            transition: all 0.3s ease;
+        }
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.8);
+        }
+
+        /* Stage Navigation Tabs (Hidden on Cover) */
         .nav-tabs {
             display: flex;
             gap: 8px;
@@ -77,6 +139,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
+        .nav-tabs.hidden { display: none; }
 
         .tab-btn {
             background: rgba(255, 255, 255, 0.08);
@@ -88,7 +151,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .tab-btn.active {
             background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
             color: #fff;
@@ -117,9 +179,7 @@
             height: 100%;
             cursor: grab;
         }
-        canvas:active {
-            cursor: grabbing;
-        }
+        canvas:active { cursor: grabbing; }
 
         video {
             width: 100%;
@@ -151,6 +211,11 @@
             border-color: #00ff66;
             color: #00ff66;
             box-shadow: 0 0 12px rgba(0, 255, 102, 0.4);
+        }
+        .inch-hud.out-of-bounds {
+            border-color: #ff2a85;
+            color: #ff2a85;
+            box-shadow: 0 0 12px rgba(255, 42, 133, 0.6);
         }
 
         /* Control Panel */
@@ -188,28 +253,23 @@
             gap: 6px;
             transition: all 0.2s ease;
         }
-
         .btn:hover {
             border-color: var(--neon-cyan);
             box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
             border: none;
             box-shadow: 0 0 15px rgba(255, 42, 133, 0.4);
         }
-
         .btn-cyan {
             background: linear-gradient(135deg, #00b4db, #0083b0);
             border: none;
         }
 
-        /* Sliders */
         .slider-group {
             margin-bottom: 12px;
         }
-
         .slider-label {
             display: flex;
             justify-content: space-between;
@@ -217,7 +277,6 @@
             color: #ccc;
             margin-bottom: 5px;
         }
-
         input[type="range"] {
             width: 100%;
             accent-color: var(--neon-pink);
@@ -227,19 +286,15 @@
             outline: none;
         }
 
-        /* Custom Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-space);
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-space); }
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(var(--neon-pink), var(--neon-cyan));
             border-radius: 4px;
         }
 
-        /* Modal Overlay for Order Form */
+        /* Order Submission Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -254,7 +309,6 @@
             justify-content: center;
             padding: 20px;
         }
-
         .modal-card {
             background: #111125;
             border: 2px solid var(--neon-cyan);
@@ -264,7 +318,6 @@
             padding: 25px;
             box-shadow: 0 0 35px rgba(0, 243, 255, 0.3);
         }
-
         .modal-title {
             font-size: 18px;
             font-weight: bold;
@@ -272,7 +325,6 @@
             color: var(--neon-cyan);
             text-align: center;
         }
-
         .form-input {
             width: 100%;
             background: rgba(255,255,255,0.06);
@@ -295,19 +347,26 @@
 <body>
 
     <div class="stars"></div>
+    <div class="celestial-brand-backdrop">HisNHerFlames.com</div>
 
     <div class="app-container">
         <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchStage(0)">1. Cover</button>
-            <button class="tab-btn" onclick="switchStage(1)">2. Example</button>
-            <button class="tab-btn" onclick="switchStage(2)">3. Template 1</button>
-            <button class="tab-btn" onclick="switchStage(3)">4. Template 2</button>
-            <button class="tab-btn" onclick="switchStage(4)">5. Closing</button>
+        <div class="nav-tabs hidden" id="navTabs">
+            <button class="tab-btn active" onclick="switchStage(1)">1. Example</button>
+            <button class="tab-btn" onclick="switchStage(2)">2. Template 1</button>
+            <button class="tab-btn" onclick="switchStage(3)">3. Template 2</button>
+            <button class="tab-btn" onclick="switchStage(4)">4. Closing</button>
         </div>
 
-        {/* Main Canvas Viewport */}
-        <div class="stage-box" id="stageBox">
+        <!-- Cover Welcome Landing Page -->
+        <div class="cover-view" id="coverView">
+            <div class="cover-overlay">
+                <button class="start-btn" onclick="startDesigning()">✨ Start Designing ✨</button>
+            </div>
+        </div>
+
+        <!-- Main Canvas Viewport -->
+        <div class="stage-box hidden" id="stageBox">
             <div id="inchHud" class="inch-hud hidden">
                 <span>📏 <span id="hudDims">2.5" × 2.7"</span></span>
             </div>
@@ -315,29 +374,24 @@
             <video id="closingVideo" src="lighter mp4_2.mp4" playsinline muted loop></video>
         </div>
 
-        {/* Control Panel */}
-        <div class="control-panel">
+        <!-- Control Panel (Hidden on Cover) -->
+        <div class="control-panel hidden" id="controlPanel">
             <div class="control-row">
                 <label class="btn btn-cyan" style="cursor: pointer;">
                     📁 Upload Image <input type="file" id="imageUpload" accept="image/*" class="hidden">
                 </label>
-                <button class="btn" onclick="triggerPopSound()">🔊 Audio Pop</button>
-                <button class="btn" id="lockBtn" onclick="toggleBoxLock()">🔓 Box: Unlocked</button>
+                <button class="btn" onclick="triggerSparkSound()">⚡ Spark Audio</button>
+                <button class="btn" id="lockBtn" onclick="toggleBoxLock()">🔒 Box: Locked</button>
             </div>
 
             <div class="slider-group">
-                <div class="slider-label"><span>Image Scale / Zoom</span><span id="scaleVal">100%</span></div>
-                <input type="range" id="imgScaleSlider" min="10" max="300" value="100" oninput="updateImageScale(this.value)">
+                <div class="slider-label"><span>Image Width (Inches)</span><span id="imgWVal">2.5"</span></div>
+                <input type="range" id="imgWidthSlider" min="50" max="400" value="220" oninput="updateImageWidth(this.value)">
             </div>
 
             <div class="slider-group">
-                <div class="slider-label"><span>Box Width (Inches)</span><span id="boxWVal">2.5"</span></div>
-                <input type="range" id="boxWidthSlider" min="50" max="350" value="220" oninput="updateBoxWidth(this.value)">
-            </div>
-
-            <div class="slider-group">
-                <div class="slider-label"><span>Box Height (Inches)</span><span id="boxHVal">2.7"</span></div>
-                <input type="range" id="boxHeightSlider" min="50" max="350" value="240" oninput="updateBoxHeight(this.value)">
+                <div class="slider-label"><span>Image Height (Inches)</span><span id="imgHVal">2.7"</span></div>
+                <input type="range" id="imgHeightSlider" min="50" max="400" value="240" oninput="updateImageHeight(this.value)">
             </div>
 
             <div class="control-row" style="margin-top: 15px; margin-bottom: 0;">
@@ -347,13 +401,13 @@
         </div>
     </div>
 
-    {/* Order Submission Modal */}
+    <!-- Order Submission Modal -->
     <div class="modal-overlay" id="orderModal">
         <div class="modal-card">
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
                 <!-- Replace with your actual Web3Forms access key -->
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -370,7 +424,6 @@
     </div>
 
     <script>
-        // --- ASSET CONFIGURATION (.png mappings) ---
         const ASSETS = {
             cover: 'cover-image_2.png',
             example: 'example-image_2.png',
@@ -384,16 +437,18 @@
         let imagesLoadedCount = 0;
         const totalImagesToLoad = Object.keys(ASSETS).length;
 
-        // Interactive Object State (for Templates 1 & 2)
+        // Image & Fixed Box State
         let userImg = null;
-        let imgX = 250, imgY = 350, imgScale = 1;
-        let boxX = 250, boxY = 600, boxW = 220, boxH = 240;
-        let isBoxLocked = false;
+        let imgX = 420, imgY = 560, imgW = 220, imgH = 240;
+        // Fixed target boundary box coordinates on Templates 1 & 2
+        const targetBox = { x: 420, y: 700, w: 220, h: 240 };
+        let isBoxLocked = true;
         let isDraggingImage = false;
         let isDraggingBox = false;
         let startX, startY;
+        let isSnapped = false;
+        let isOutOfBounds = false;
 
-        // Animation & Pulse Phase
         let pulseTimer = 0;
         let flameSway = 0;
 
@@ -401,22 +456,56 @@
         const ctx = canvas.getContext('2d');
         const video = document.getElementById('closingVideo');
         const inchHud = document.getElementById('inchHud');
+        const coverView = document.getElementById('coverView');
+        const stageBox = document.getElementById('stageBox');
+        const controlPanel = document.getElementById('controlPanel');
+        const navTabs = document.getElementById('navTabs');
 
-        // Web Audio API for Pop Snap & Victory Chime
+        // Web Audio API for Spark Click & Sticky Snap Popping
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function triggerPopSound() {
+        function triggerSparkSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        function playSnapPop() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.08);
             gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
             osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        function playWarningBuzz() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(90, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.12);
         }
 
         function playVictoryChime() {
@@ -437,7 +526,6 @@
             });
         }
 
-        // Load Images
         function initAssets() {
             for (let key in ASSETS) {
                 loadedImages[key] = new Image();
@@ -445,11 +533,11 @@
                 loadedImages[key].onload = () => {
                     imagesLoadedCount++;
                     if (imagesLoadedCount === totalImagesToLoad) {
+                        coverView.style.backgroundImage = `url(${ASSETS.cover})`;
                         requestAnimationFrame(mainLoop);
                     }
                 };
                 loadedImages[key].onerror = () => {
-                    console.warn("Asset load warning for: " + ASSETS[key]);
                     imagesLoadedCount++;
                     if (imagesLoadedCount === totalImagesToLoad) {
                         requestAnimationFrame(mainLoop);
@@ -458,7 +546,15 @@
             }
         }
 
-        // Main Animation & Render Loop
+        function startDesigning() {
+            triggerSparkSound();
+            coverView.classList.add('hidden');
+            stageBox.classList.remove('hidden');
+            controlPanel.classList.remove('hidden');
+            navTabs.classList.remove('hidden');
+            switchStage(1);
+        }
+
         function mainLoop() {
             pulseTimer += 0.05;
             flameSway = Math.sin(pulseTimer * 1.5) * 8;
@@ -466,40 +562,29 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             if (currentStage === 4) {
-                // Closing Stage background image
                 if (loadedImages.closing && loadedImages.closing.complete) {
                     ctx.drawImage(loadedImages.closing, 0, 0, canvas.width, canvas.height);
                 }
                 renderClosingEffects();
             } else {
-                // Render corresponding asset background
                 let bgKey = ['cover', 'example', 'template1', 'template2'][currentStage];
                 if (loadedImages[bgKey] && loadedImages[bgKey].complete) {
                     ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
                 }
 
-                // Render User Image & Boundary Box on Templates 1 & 2
-                if (currentStage >= 2) {
-                    if (userImg) {
-                        ctx.save();
-                        ctx.translate(imgX, imgY);
-                        ctx.scale(imgScale, imgScale);
-                        ctx.drawImage(userImg, -userImg.width / 2, -userImg.height / 2);
-                        ctx.restore();
-                    }
-
-                    // Draw Boundary Box with Neon Glow & Inch Target Check
+                // Render User Image on Templates 1 & 2
+                if (currentStage >= 2 && userImg) {
                     ctx.save();
-                    let glowIntensity = 10 + Math.sin(pulseTimer * 2) * 6;
-                    ctx.shadowColor = '#00f3ff';
-                    ctx.shadowBlur = glowIntensity;
-                    ctx.strokeStyle = '#00f3ff';
-                    ctx.lineWidth = 3;
-                    ctx.setLineDash([8, 6]);
-                    ctx.strokeRect(boxX - boxW / 2, boxY - boxH / 2, boxW, boxH);
+                    // Neon Dragging Trail / Glow effect
+                    let trailGlow = isSnapped ? 20 : (isOutOfBounds ? 15 : 8);
+                    ctx.shadowColor = isOutOfBounds ? '#ff2a85' : (isSnapped ? '#00ff66' : '#00f3ff');
+                    ctx.shadowBlur = trailGlow;
+                    ctx.drawImage(userImg, imgX - imgW / 2, imgY - imgH / 2, imgW, imgH);
                     ctx.restore();
+                }
 
-                    // Heartbeat Neon Glow highlight on original "HERE" text area
+                // Heartbeat Neon Glow highlight on original "HERE" text area
+                if (currentStage >= 2) {
                     ctx.save();
                     let herePulse = 15 + Math.sin(pulseTimer * 3) * 8;
                     ctx.shadowColor = '#00f3ff';
@@ -514,14 +599,12 @@
             requestAnimationFrame(mainLoop);
         }
 
-        // Render 3D Swaying Flame & Double-Lit Candle Smoke on Closing Stage
+        // Closing Stage Flame Lowered by ~10mm (~35px down)
         function renderClosingEffects() {
             ctx.save();
-            // Lighter Flame at top tip (~X: 420, Y: 580)
             let fx = 420 + flameSway;
-            let fy = 560;
+            let fy = 595; // Adjusted lower by 35px (~10mm)
 
-            // Outer Glow Aura
             let grad = ctx.createRadialGradient(fx, fy - 30, 5, fx, fy - 30, 70);
             grad.addColorStop(0, 'rgba(255, 165, 0, 0.6)');
             grad.addColorStop(0.5, 'rgba(255, 69, 0, 0.2)');
@@ -531,7 +614,6 @@
             ctx.arc(fx, fy - 30, 70, 0, Math.PI * 2);
             ctx.fill();
 
-            // Flame Core (3D Swaying Shape)
             ctx.fillStyle = '#ffcc00';
             ctx.beginPath();
             ctx.moveTo(fx, fy - 80);
@@ -546,7 +628,7 @@
             ctx.bezierCurveTo(fx - 5, fy - 20, fx - 8, fy - 35, fx, fy - 60);
             ctx.fill();
 
-            // Candle Smoke (Rising from side wicks)
+            // Candle Smoke Rising
             ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
             for (let i = 0; i < 3; i++) {
                 let sx = 280 + i * 120 + Math.sin(pulseTimer + i) * 15;
@@ -559,11 +641,10 @@
             ctx.restore();
         }
 
-        // Stage Navigation
         function switchStage(stageIdx) {
             currentStage = stageIdx;
             document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-                btn.classList.toggle('active', idx === stageIdx);
+                btn.classList.toggle('active', (idx + 1) === stageIdx);
             });
 
             if (currentStage === 4) {
@@ -585,7 +666,6 @@
             if (currentStage < 4) {
                 switchStage(currentStage + 1);
             } else {
-                // Transition to Final 3D MP4 Video Showcase
                 canvas.style.display = 'none';
                 video.style.display = 'block';
                 video.play();
@@ -594,7 +674,6 @@
             }
         }
 
-        // Image Upload Handling
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -602,10 +681,13 @@
                 reader.onload = function(event) {
                     userImg = new Image();
                     userImg.onload = function() {
-                        imgScale = 1;
-                        document.getElementById('imgScaleSlider').value = 100;
-                        document.getElementById('scaleVal').innerText = '100%';
-                        triggerPopSound();
+                        imgW = 220;
+                        imgH = 240;
+                        imgX = targetBox.x;
+                        imgY = targetBox.y;
+                        document.getElementById('imgWidthSlider').value = imgW;
+                        document.getElementById('imgHeightSlider').value = imgH;
+                        triggerSparkSound();
                     };
                     userImg.src = event.target.result;
                 };
@@ -613,34 +695,46 @@
             }
         });
 
-        // Controls & Resizing
-        function updateImageScale(val) {
-            imgScale = val / 100;
-            document.getElementById('scaleVal').innerText = val + '%';
+        // Image Dimension Controls (Width x Height)
+        function updateImageWidth(val) {
+            imgW = parseInt(val);
+            let inchesW = (imgW / 88).toFixed(1);
+            document.getElementById('imgWVal').innerText = inchesW + '"';
+            checkBounds();
         }
 
-        function updateBoxWidth(val) {
-            boxW = parseInt(val);
-            let inchesW = (boxW / 88).toFixed(1);
-            document.getElementById('boxWVal').innerText = inchesW + '"';
-            checkInchTarget();
+        function updateImageHeight(val) {
+            imgH = parseInt(val);
+            let inchesH = (imgH / 88).toFixed(1);
+            document.getElementById('imgHVal').innerText = inchesH + '"';
+            checkBounds();
         }
 
-        function updateBoxHeight(val) {
-            boxH = parseInt(val);
-            let inchesH = (boxH / 88).toFixed(1);
-            document.getElementById('boxHVal').innerText = inchesH + '"';
-            checkInchTarget();
-        }
-
-        function checkInchTarget() {
-            let iw = (boxW / 88).toFixed(1);
-            let ih = (boxH / 88).toFixed(1);
+        function checkBounds() {
+            let iw = (imgW / 88).toFixed(1);
+            let ih = (imgH / 88).toFixed(1);
             document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
-            if (Math.abs(iw - 2.5) <= 0.2 && Math.abs(ih - 2.7) <= 0.2) {
-                inchHud.classList.add('target-met');
+
+            // Distance check to target box for sticky snap & warning buzzer
+            let dist = Math.hypot(imgX - targetBox.x, imgY - targetBox.y);
+            if (dist < 40) {
+                if (!isSnapped) {
+                    playSnapPop();
+                    isSnapped = true;
+                }
+                isOutOfBounds = false;
+                inchHud.className = 'inch-hud target-met';
+            } else if (imgX < 100 || imgX > 740 || imgY < 100 || imgY > 1020) {
+                if (!isOutOfBounds) {
+                    playWarningBuzz();
+                    isOutOfBounds = true;
+                }
+                isSnapped = false;
+                inchHud.className = 'inch-hud out-of-bounds';
             } else {
-                inchHud.classList.remove('target-met');
+                isSnapped = false;
+                isOutOfBounds = false;
+                inchHud.className = 'inch-hud';
             }
         }
 
@@ -648,16 +742,16 @@
             isBoxLocked = !isBoxLocked;
             const btn = document.getElementById('lockBtn');
             btn.innerText = isBoxLocked ? '🔒 Box: Locked' : '🔓 Box: Unlocked';
-            triggerPopSound();
+            triggerSparkSound();
         }
 
-        // Canvas Mouse Dragging Interaction
+        // Canvas Mouse Dragging Interaction with Sticky Snap
         canvas.addEventListener('mousedown', (e) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
             const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
 
-            if (!isBoxLocked && Math.abs(mouseX - boxX) < boxW / 2 && Math.abs(mouseY - boxY) < boxH / 2) {
+            if (!isBoxLocked && Math.abs(mouseX - targetBox.x) < targetBox.w/2 && Math.abs(mouseY - targetBox.y) < targetBox.h/2) {
                 isDraggingBox = true;
             } else {
                 isDraggingImage = true;
@@ -675,30 +769,31 @@
             const dy = mouseY - startY;
 
             if (isDraggingBox) {
-                boxX += dx;
-                boxY += dy;
+                targetBox.x += dx;
+                targetBox.y += dy;
             } else if (isDraggingImage) {
                 imgX += dx;
                 imgY += dy;
+                checkBounds();
             }
             startX = mouseX;
             startY = mouseY;
         });
 
         window.addEventListener('mouseup', () => {
+            if (isDraggingImage && Math.hypot(imgX - targetBox.x, imgY - targetBox.y) < 30) {
+                imgX = targetBox.x;
+                imgY = targetBox.y;
+                playSnapPop();
+                isSnapped = true;
+            }
             isDraggingImage = false;
             isDraggingBox = false;
         });
 
-        // Order Modal Functions
-        function openOrderModal() {
-            document.getElementById('orderModal').style.display = 'flex';
-        }
-        function closeOrderModal() {
-            document.getElementById('orderModal').style.display = 'none';
-        }
+        function openOrderModal() { document.getElementById('orderModal').style.display = 'flex'; }
+        function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
 
-        // Web3Forms Submission
         function submitOrder(event) {
             event.preventDefault();
             const form = document.getElementById('orderForm');
@@ -708,10 +803,7 @@
 
             fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: json
             })
             .then(async (response) => {
@@ -730,7 +822,6 @@
             });
         }
 
-        // Initialize App on Load
         window.onload = initAssets;
     </script>
 </body>
