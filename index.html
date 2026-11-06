@@ -109,16 +109,33 @@
             box-shadow: 0 0 35px rgba(0, 243, 255, 0.8);
         }
 
-        /* Centered Branding Under Start Button */
+        /* Centered Branding & Tagline Under Start Button */
+        .cover-brand-box {
+            margin-top: 18px; /* Brought down 3-5mm */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
         .cover-brand {
-            margin-top: 15px;
             font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, sans-serif;
             font-size: 24px;
             letter-spacing: 2px;
             color: #ffffff;
             text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px #ffffff;
-            text-align: center;
             animation: brandPulse 3s infinite alternate;
+        }
+
+        .cover-tagline {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
         }
 
         @keyframes brandPulse {
@@ -354,11 +371,14 @@
             <button class="tab-btn" onclick="switchStage(4)">4. Closing</button>
         </div>
 
-        <!-- Cover Welcome Landing Page Container with Centered Branding Below -->
+        <!-- Cover Welcome Landing Page Container -->
         <div class="cover-container" id="coverContainer">
             <div class="cover-view"></div>
             <button class="start-btn" id="startBtn">✨ Start Designing ✨</button>
-            <div class="cover-brand">HisNHerFlames.com</div>
+            <div class="cover-brand-box">
+                <div class="cover-brand">HisNHerFlames.com</div>
+                <div class="cover-tagline">Your brand in every flame, your flame in every candle</div>
+            </div>
         </div>
 
         <!-- Main Canvas Viewport -->
@@ -403,7 +423,7 @@
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
                 <!-- Replace with your actual Web3Forms access key -->
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -570,7 +590,6 @@
                     ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
                 }
 
-                // Render User Image on Templates 1 & 2 (Clean, No Ghost Boxes)
                 if (currentStage >= 2 && userImg) {
                     ctx.save();
                     let trailGlow = isSnapped ? 20 : (isOutOfBounds ? 15 : 8);
@@ -580,7 +599,6 @@
                     ctx.restore();
                 }
 
-                // Render Pulsating Guide Arrows pointing inward to target box on T1 & T2
                 if (currentStage >= 2) {
                     renderGuideArrows();
                 }
@@ -589,7 +607,7 @@
             requestAnimationFrame(mainLoop);
         }
 
-        // Pulsating Guide Arrows Pointing Inward to Target Drop Zone
+        // Render Guide Arrows with specific Template adjustments
         function renderGuideArrows() {
             ctx.save();
             let arrowPulse = 5 + Math.sin(pulseTimer * 4) * 4;
@@ -602,32 +620,40 @@
             let bx = targetBox.x, by = targetBox.y, bw = targetBox.w, bh = targetBox.h;
             let offset = 18 + arrowPulse;
 
+            // Template 1: Shifted down 3-5mm (~15px) and rightward 25-30mm (~110px) to sit between E and R of HERE
+            // Template 2: Shifted upward vertically by 5 mm (~20px)
+            let offsetX = (currentStage === 2) ? 110 : 0;
+            let offsetY = (currentStage === 2) ? 15 : (currentStage === 3 ? -20 : 0);
+
+            let targetX = bx + offsetX;
+            let targetY = by + offsetY;
+
             // Top Arrow pointing Down
             ctx.beginPath();
-            ctx.moveTo(bx, by - bh/2 - offset - 10);
-            ctx.lineTo(bx, by - bh/2 - offset);
-            ctx.moveTo(bx - 6, by - bh/2 - offset - 6);
-            ctx.lineTo(bx, by - bh/2 - offset);
-            ctx.lineTo(bx + 6, by - bh/2 - offset - 6);
+            ctx.moveTo(targetX, targetY - bh/2 - offset - 10);
+            ctx.lineTo(targetX, targetY - bh/2 - offset);
+            ctx.moveTo(targetX - 6, targetY - bh/2 - offset - 6);
+            ctx.lineTo(targetX, targetY - bh/2 - offset);
+            ctx.lineTo(targetX + 6, targetY - bh/2 - offset - 6);
             ctx.stroke();
 
             // Bottom Arrow pointing Up
             ctx.beginPath();
-            ctx.moveTo(bx, by + bh/2 + offset + 10);
-            ctx.lineTo(bx, by + bh/2 + offset);
-            ctx.moveTo(bx - 6, by + bh/2 + offset + 6);
-            ctx.lineTo(bx, by + bh/2 + offset);
-            ctx.lineTo(bx + 6, by + bh/2 + offset + 6);
+            ctx.moveTo(targetX, targetY + bh/2 + offset + 10);
+            ctx.lineTo(targetX, targetY + bh/2 + offset);
+            ctx.moveTo(targetX - 6, targetY + bh/2 + offset + 6);
+            ctx.lineTo(targetX, targetY + bh/2 + offset);
+            ctx.lineTo(targetX + 6, targetY + bh/2 + offset + 6);
             ctx.stroke();
 
             ctx.restore();
         }
 
-        // Realistic Flame: Still Root at Tip, Swaying Upper Plume + Multi-Tones & Smoke
+        // Realistic Anchored Flame, Smoke & Fading Neon "Thank You"
         function renderClosingEffects() {
             ctx.save();
-            let fx = 420; // Fixed root X on lighter tip
-            let fy = 615; // Lowered by 3-5mm to clear fingernail
+            let fx = 420;
+            let fy = 615;
 
             // Outer Neon Glow Aura
             let grad = ctx.createRadialGradient(fx, fy - 25, 5, fx, fy - 25, 75);
@@ -642,25 +668,25 @@
             // Outer Orange Plume (Swaying ONLY at top)
             ctx.fillStyle = 'rgba(255, 120, 0, 0.85)';
             ctx.beginPath();
-            ctx.moveTo(fx - 12, fy); // Still Root
-            ctx.bezierCurveTo(fx - 15, fy - 35, fx + flameSway - 25, fy - 70, fx + flameSway, fy - 95); // Swaying Tip
-            ctx.bezierCurveTo(fx + flameSway + 25, fy - 70, fx + 15, fy - 35, fx + 12, fy); // Still Root
+            ctx.moveTo(fx - 12, fy);
+            ctx.bezierCurveTo(fx - 15, fy - 35, fx + flameSway - 25, fy - 70, fx + flameSway, fy - 95);
+            ctx.bezierCurveTo(fx + flameSway + 25, fy - 70, fx + 15, fy - 35, fx + 12, fy);
             ctx.fill();
 
-            // Inner Bright Yellow Core (Swaying Upper Body)
+            // Inner Bright Yellow Core
             ctx.fillStyle = '#ffcc00';
             ctx.beginPath();
-            ctx.moveTo(fx - 7, fy); // Still Root
+            ctx.moveTo(fx - 7, fy);
             ctx.bezierCurveTo(fx - 10, fy - 30, fx + flameSway*0.7 - 15, fy - 55, fx + flameSway*0.7, fy - 75);
-            ctx.bezierCurveTo(fx + flameSway*0.7 + 15, fy - 55, fx + 10, fy - 30, fx + 7, fy); // Still Root
+            ctx.bezierCurveTo(fx + flameSway*0.7 + 15, fy - 55, fx + 10, fy - 30, fx + 7, fy);
             ctx.fill();
 
             // White-Hot Inner Center
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.moveTo(fx - 3, fy); // Still Root
+            ctx.moveTo(fx - 3, fy);
             ctx.bezierCurveTo(fx - 5, fy - 20, fx + flameSway*0.4 - 8, fy - 40, fx + flameSway*0.4, fy - 55);
-            ctx.bezierCurveTo(fx + flameSway*0.4 + 8, fy - 40, fx + 5, fy - 20, fx + 3, fy); // Still Root
+            ctx.bezierCurveTo(fx + flameSway*0.4 + 8, fy - 40, fx + 5, fy - 20, fx + 3, fy);
             ctx.fill();
 
             // Candle Smoke Rising
@@ -673,6 +699,19 @@
                 ctx.arc(sx, sy, sr, 0, Math.PI * 2);
                 ctx.fill();
             }
+
+            // Fading In & Out Creative "Thank You" Text (Positioned safely away from hand & flame)
+            let thankAlpha = Math.abs(Math.sin(pulseTimer * 0.8)); // Smooth fade in/out
+            ctx.save();
+            ctx.globalAlpha = 0.2 + (thankAlpha * 0.8);
+            ctx.font = 'italic 600 36px "Brush Script MT", "Lucida Handwriting", cursive';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#00f3ff';
+            ctx.shadowColor = '#ff2a85';
+            ctx.shadowBlur = 18;
+            ctx.fillText("Thank You!", 210, 200); // Placed cleanly in upper-left safe area
+            ctx.restore();
+
             ctx.restore();
         }
 
@@ -694,176 +733,3 @@
                 inchHud.classList.add('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
-            }
-        }
-
-        window.switchStage = switchStage;
-
-        function nextStage() {
-            if (currentStage < 4) {
-                switchStage(currentStage + 1);
-            } else {
-                canvas.style.display = 'none';
-                video.style.display = 'block';
-                video.play();
-                inchHud.classList.add('hidden');
-                playVictoryChime();
-            }
-        }
-        window.nextStage = nextStage;
-
-        document.getElementById('imageUpload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    userImg = new Image();
-                    userImg.onload = function() {
-                        imgW = 220;
-                        imgH = 240;
-                        imgX = targetBox.x;
-                        imgY = targetBox.y;
-                        document.getElementById('imgWidthSlider').value = imgW;
-                        document.getElementById('imgHeightSlider').value = imgH;
-                        playCoinSound();
-                    };
-                    userImg.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        function updateImageWidth(val) {
-            imgW = parseInt(val);
-            let inchesW = (imgW / 88).toFixed(1);
-            document.getElementById('imgWVal').innerText = inchesW + '"';
-            checkBounds();
-        }
-        window.updateImageWidth = updateImageWidth;
-
-        function updateImageHeight(val) {
-            imgH = parseInt(val);
-            let inchesH = (imgH / 88).toFixed(1);
-            document.getElementById('imgHVal').innerText = inchesH + '"';
-            checkBounds();
-        }
-        window.updateImageHeight = updateImageHeight;
-
-        function checkBounds() {
-            let iw = (imgW / 88).toFixed(1);
-            let ih = (imgH / 88).toFixed(1);
-            document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
-
-            let dist = Math.hypot(imgX - targetBox.x, imgY - targetBox.y);
-            if (dist < 40) {
-                if (!isSnapped) {
-                    playSnapPop();
-                    isSnapped = true;
-                }
-                isOutOfBounds = false;
-                inchHud.className = 'inch-hud target-met';
-            } else if (imgX < 100 || imgX > 740 || imgY < 100 || imgY > 1020) {
-                if (!isOutOfBounds) {
-                    playWarningBuzz();
-                    isOutOfBounds = true;
-                }
-                isSnapped = false;
-                inchHud.className = 'inch-hud out-of-bounds';
-            } else {
-                isSnapped = false;
-                isOutOfBounds = false;
-                inchHud.className = 'inch-hud';
-            }
-        }
-
-        function toggleBoxLock() {
-            isBoxLocked = !isBoxLocked;
-            const btn = document.getElementById('lockBtn');
-            btn.innerText = isBoxLocked ? '🔒 Box: Locked' : '🔓 Box: Unlocked';
-            playCoinSound();
-        }
-        window.toggleBoxLock = toggleBoxLock;
-
-        canvas.addEventListener('mousedown', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
-            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-            if (!isBoxLocked && Math.abs(mouseX - targetBox.x) < targetBox.w/2 && Math.abs(mouseY - targetBox.y) < targetBox.h/2) {
-                isDraggingBox = true;
-            } else {
-                isDraggingImage = true;
-            }
-            startX = mouseX;
-            startY = mouseY;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isDraggingImage && !isDraggingBox) return;
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
-            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
-            const dx = mouseX - startX;
-            const dy = mouseY - startY;
-
-            if (isDraggingBox) {
-                targetBox.x += dx;
-                targetBox.y += dy;
-            } else if (isDraggingImage) {
-                imgX += dx;
-                imgY += dy;
-                checkBounds();
-            }
-            startX = mouseX;
-            startY = mouseY;
-        });
-
-        window.addEventListener('mouseup', () => {
-            if (isDraggingImage && Math.hypot(imgX - targetBox.x, imgY - targetBox.y) < 30) {
-                imgX = targetBox.x;
-                imgY = targetBox.y;
-                playSnapPop();
-                isSnapped = true;
-            }
-            isDraggingImage = false;
-            isDraggingBox = false;
-        });
-
-        function openOrderModal() { document.getElementById('orderModal').style.display = 'flex'; }
-        window.openOrderModal = openOrderModal;
-        function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
-        window.closeOrderModal = closeOrderModal;
-
-        function submitOrder(event) {
-            event.preventDefault();
-            const form = document.getElementById('orderForm');
-            const formData = new FormData(form);
-            const object = Object.fromEntries(formData);
-            const json = JSON.stringify(object);
-
-            fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: json
-            })
-            .then(async (response) => {
-                let jsonRes = await response.json();
-                if (response.status === 200) {
-                    playVictoryChime();
-                    alert("🎉 Success! Your custom lighter wrap order has been submitted successfully to HisNHerFlames.com!");
-                    closeOrderModal();
-                } else {
-                    alert(jsonRes.message || "Something went wrong. Please check your Web3Forms access key.");
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                alert("Submission failed. Please check your internet connection.");
-            });
-        }
-        window.submitOrder = submitOrder;
-
-        window.onload = initAssets;
-    </script>
-</body>
-</html>
