@@ -446,7 +446,7 @@
         <div class="modal-card">
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -514,4 +514,432 @@
             [987.77, 1318.51].forEach((freq, idx) => {
                 setTimeout(() => {
                     const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }, idx * 80);
+            });
+        }
+
+        function playSnapPop() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        function playWarningBuzz() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(90, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.12);
+        }
+
+        function playVictoryChime() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                }, idx * 90);
+            });
+        }
+
+        function initAssets() {
+            for (let key in ASSETS) {
+                loadedImages[key] = new Image();
+                loadedImages[key].src = ASSETS[key];
+            }
+            requestAnimationFrame(mainLoop);
+        }
+
+        function startDesigning() {
+            playCoinSound();
+            coverContainer.classList.add('hidden');
+            stageBox.classList.remove('hidden');
+            controlPanel.classList.remove('hidden');
+            navTabs.classList.remove('hidden');
+            switchStage(1);
+        }
+
+        // Direct unblocked event binding guaranteeing immediate startup execution
+        document.getElementById('startBtn').addEventListener('click', startDesigning);
+
+        function mainLoop() {
+            pulseTimer += 0.05;
+            flameSway = Math.sin(pulseTimer * 1.5) * 8;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (currentStage === 4) {
+                if (loadedImages.closing && loadedImages.closing.complete) {
+                    ctx.drawImage(loadedImages.closing, 0, 0, canvas.width, canvas.height);
+                }
+                renderClosingEffects();
+            } else {
+                let bgKey = ['cover', 'example', 'template1', 'template2'][currentStage];
+                if (loadedImages[bgKey] && loadedImages[bgKey].complete) {
+                    ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
+                }
+
+                // Render Independent Template Image safely
+                if (currentStage >= 2 && templateState[currentStage]) {
+                    let st = templateState[currentStage];
+                    if (st.userImg && st.userImg.complete) {
+                        ctx.save();
+                        let trailGlow = isSnapped ? 20 : (isOutOfBounds ? 15 : 8);
+                        ctx.shadowColor = isOutOfBounds ? '#ff2a85' : (isSnapped ? '#00ff66' : '#00f3ff');
+                        ctx.shadowBlur = trailGlow;
+                        ctx.drawImage(st.userImg, st.imgX - st.imgW / 2, st.imgY - st.imgH / 2, st.imgW, st.imgH);
+                        ctx.restore();
+                    }
+                }
+
+                if (currentStage >= 2) {
+                    renderGuideArrows();
+                }
+            }
+
+            requestAnimationFrame(mainLoop);
+        }
+
+        // Render Synced Guide Arrows
+        function renderGuideArrows() {
+            ctx.save();
+            let arrowPulse = 5 + Math.sin(pulseTimer * 4) * 4;
+            ctx.strokeStyle = '#00f3ff';
+            ctx.fillStyle = '#00f3ff';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#00f3ff';
+            ctx.shadowBlur = 10;
+
+            let targetBox = getActiveTargetBox();
+            let targetX = targetBox.x;
+            let targetY = targetBox.y;
+            let bh = targetBox.h;
+            let offset = 18 + arrowPulse;
+
+            // Top Arrow pointing Down
+            ctx.beginPath();
+            ctx.moveTo(targetX, targetY - bh/2 - offset - 10);
+            ctx.lineTo(targetX, targetY - bh/2 - offset);
+            ctx.moveTo(targetX - 6, targetY - bh/2 - offset - 6);
+            ctx.lineTo(targetX, targetY - bh/2 - offset);
+            ctx.lineTo(targetX + 6, targetY - bh/2 - offset - 6);
+            ctx.stroke();
+
+            // Bottom Arrow pointing Up
+            ctx.beginPath();
+            ctx.moveTo(targetX, targetY + bh/2 + offset + 10);
+            ctx.lineTo(targetX, targetY + bh/2 + offset);
+            ctx.moveTo(targetX - 6, targetY + bh/2 + offset + 6);
+            ctx.lineTo(targetX, targetY + bh/2 + offset);
+            ctx.lineTo(targetX + 6, targetY + bh/2 + offset + 6);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Anchored Flame & Smoke
+        function renderClosingEffects() {
+            ctx.save();
+            let fx = 420;
+            let fy = 615;
+
+            let grad = ctx.createRadialGradient(fx, fy - 25, 5, fx, fy - 25, 75);
+            grad.addColorStop(0, 'rgba(255, 165, 0, 0.5)');
+            grad.addColorStop(0.5, 'rgba(255, 69, 0, 0.15)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(fx, fy - 25, 75, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(255, 120, 0, 0.85)';
+            ctx.beginPath();
+            ctx.moveTo(fx - 12, fy);
+            ctx.bezierCurveTo(fx - 15, fy - 35, fx + flameSway - 25, fy - 70, fx + flameSway, fy - 95);
+            ctx.bezierCurveTo(fx + flameSway + 25, fy - 70, fx + 15, fy - 35, fx + 12, fy);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffcc00';
+            ctx.beginPath();
+            ctx.moveTo(fx - 7, fy);
+            ctx.bezierCurveTo(fx - 10, fy - 30, fx + flameSway*0.7 - 15, fy - 55, fx + flameSway*0.7, fy - 75);
+            ctx.bezierCurveTo(fx + flameSway*0.7 + 15, fy - 55, fx + 10, fy - 30, fx + 7, fy);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(fx - 3, fy);
+            ctx.bezierCurveTo(fx - 5, fy - 20, fx + flameSway*0.4 - 8, fy - 40, fx + flameSway*0.4, fy - 55);
+            ctx.bezierCurveTo(fx + flameSway*0.4 + 8, fy - 40, fx + 5, fy - 20, fx + 3, fy);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+            for (let i = 0; i < 3; i++) {
+                let sx = 280 + i * 120 + Math.sin(pulseTimer + i) * 15;
+                let sy = 680 - ((pulseTimer * 40 + i * 50) % 180);
+                let sr = 8 + ((pulseTimer * 10 + i * 20) % 25);
+                ctx.beginPath();
+                ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        function switchStage(stageIdx) {
+            currentStage = stageIdx;
+            videoThankYou.style.display = 'none';
+
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', (idx + 1) === stageIdx);
+            });
+
+            // Update Sliders to match current template's independent state
+            if (templateState[currentStage]) {
+                let st = templateState[currentStage];
+                document.getElementById('imgWidthSlider').value = st.imgW;
+                document.getElementById('imgHeightSlider').value = st.imgH;
+                document.getElementById('imgWVal').innerText = (st.imgW / 88).toFixed(1) + '"';
+                document.getElementById('imgHVal').innerText = (st.imgH / 88).toFixed(1) + '"';
+            }
+
+            if (currentStage === 4) {
+                inchHud.classList.add('hidden');
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+            } else if (currentStage >= 2) {
+                inchHud.classList.remove('hidden');
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+            } else {
+                inchHud.classList.add('hidden');
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+            }
+        }
+        window.switchStage = switchStage;
+
+        function nextStage() {
+            if (currentStage < 4) {
+                switchStage(currentStage + 1);
+            } else {
+                canvas.style.display = 'none';
+                video.style.display = 'block';
+                video.play();
+                inchHud.classList.add('hidden');
+                videoThankYou.style.display = 'block';
+                playVictoryChime();
+            }
+        }
+        window.nextStage = nextStage;
+
+        // Upload handler updates only the current active template independently
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && templateState[currentStage]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    let st = templateState[currentStage];
+                    st.userImg = new Image();
+                    st.userImg.onload = function() {
+                        let targetBox = getActiveTargetBox();
+                        st.imgW = 220;
+                        st.imgH = 240;
+                        st.imgX = targetBox.x;
+                        st.imgY = targetBox.y;
+                        document.getElementById('imgWidthSlider').value = st.imgW;
+                        document.getElementById('imgHeightSlider').value = st.imgH;
+                        playCoinSound();
+                        checkBounds();
+                    };
+                    st.userImg.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function updateImageWidth(val) {
+            if (templateState[currentStage]) {
+                let st = templateState[currentStage];
+                st.imgW = parseInt(val);
+                let inchesW = (st.imgW / 88).toFixed(1);
+                document.getElementById('imgWVal').innerText = inchesW + '"';
+                checkBounds();
+            }
+        }
+        window.updateImageWidth = updateImageWidth;
+
+        function updateImageHeight(val) {
+            if (templateState[currentStage]) {
+                let st = templateState[currentStage];
+                st.imgH = parseInt(val);
+                let inchesH = (st.imgH / 88).toFixed(1);
+                document.getElementById('imgHVal').innerText = inchesH + '"';
+                checkBounds();
+            }
+        }
+        window.updateImageHeight = updateImageHeight;
+
+        function checkBounds() {
+            if (!templateState[currentStage]) return;
+            let st = templateState[currentStage];
+            let targetBox = getActiveTargetBox();
+            let iw = (st.imgW / 88).toFixed(1);
+            let ih = (st.imgH / 88).toFixed(1);
+            document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
+
+            let dist = Math.hypot(st.imgX - targetBox.x, st.imgY - targetBox.y);
+            if (dist < 40) {
+                if (!isSnapped) {
+                    playSnapPop();
+                    isSnapped = true;
+                }
+                isOutOfBounds = false;
+                inchHud.className = 'inch-hud target-met';
+            } else if (st.imgX < 100 || st.imgX > 740 || st.imgY < 100 || st.imgY > 1020) {
+                if (!isOutOfBounds) {
+                    playWarningBuzz();
+                    isOutOfBounds = true;
+                }
+                isSnapped = false;
+                inchHud.className = 'inch-hud out-of-bounds';
+            } else {
+                isSnapped = false;
+                isOutOfBounds = false;
+                inchHud.className = 'inch-hud';
+            }
+        }
+
+        function toggleBoxLock() {
+            isBoxLocked = !isBoxLocked;
+            const btn = document.getElementById('lockBtn');
+            btn.innerText = isBoxLocked ? '🔒 Box: Locked' : '🔓 Box: Unlocked';
+            playCoinSound();
+        }
+        window.toggleBoxLock = toggleBoxLock;
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!templateState[currentStage]) return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+            let targetBox = getActiveTargetBox();
+
+            if (!isBoxLocked && Math.abs(mouseX - targetBox.x) < targetBox.w/2 && Math.abs(mouseY - targetBox.y) < targetBox.h/2) {
+                isDraggingBox = true;
+            } else {
+                isDraggingImage = true;
+            }
+            startX = mouseX;
+            startY = mouseY;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingImage && !isDraggingBox) return;
+            if (!templateState[currentStage]) return;
+            let st = templateState[currentStage];
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+            const dx = mouseX - startX;
+            const dy = mouseY - startY;
+
+            let targetBox = getActiveTargetBox();
+
+            if (isDraggingBox) {
+                targetBox.x += dx;
+                targetBox.y += dy;
+            } else if (isDraggingImage) {
+                st.imgX += dx;
+                st.imgY += dy;
+                checkBounds();
+            }
+            startX = mouseX;
+            startY = mouseY;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!templateState[currentStage]) return;
+            let st = templateState[currentStage];
+            let targetBox = getActiveTargetBox();
+            if (isDraggingImage && Math.hypot(st.imgX - targetBox.x, st.imgY - targetBox.y) < 30) {
+                st.imgX = targetBox.x;
+                st.imgY = targetBox.y;
+                playSnapPop();
+                isSnapped = true;
+            }
+            isDraggingImage = false;
+            isDraggingBox = false;
+        });
+
+        function openOrderModal() { document.getElementById('orderModal').style.display = 'flex'; }
+        window.openOrderModal = openOrderModal;
+        function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
+        window.closeOrderModal = closeOrderModal;
+
+        function submitOrder(event) {
+            event.preventDefault();
+            const form = document.getElementById('orderForm');
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: json
+            })
+            .then(async (response) => {
+                let jsonRes = await response.json();
+                if (response.status === 200) {
+                    playVictoryChime();
+                    alert("🎉 Success! Your custom lighter wrap order has been submitted successfully to HisNHerFlames.com!");
+                    closeOrderModal();
+                } else {
+                    alert(jsonRes.message || "Something went wrong. Please check your Web3Forms access key.");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Submission failed. Please check your internet connection.");
+            });
+        }
+        window.submitOrder = submitOrder;
+
+        window.onload = initAssets;
+    </script>
+</body>
+</html>
