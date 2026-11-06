@@ -33,7 +33,7 @@
             padding: 20px 0;
         }
 
-        /* Celestial Starry Background with Floating Brand Backdrop */
+        /* Celestial Starry Background */
         .stars {
             position: fixed;
             top: 0;
@@ -58,20 +58,26 @@
             100% { transform: translateY(-250px); }
         }
 
-        /* Floating Cursive Brand Backdrop in Side Flanks */
+        /* Horizontal Neon Pink & White Cursive Brand Backdrop in Side Flank */
         .celestial-brand-backdrop {
             position: fixed;
             right: 40px;
             top: 50%;
-            transform: translateY(-50%) rotate(-90deg);
+            transform: translateY(-50%);
             font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, sans-serif;
-            font-size: 28px;
-            letter-spacing: 3px;
-            color: rgba(0, 243, 255, 0.25);
-            text-shadow: 0 0 15px rgba(0, 243, 255, 0.3), 0 0 30px rgba(255, 42, 133, 0.15);
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px #ffffff;
             pointer-events: none;
             z-index: 1;
-            white-space: nowrap;
+            writing-mode: horizontal-tb;
+            animation: brandPulse 3s infinite alternate;
+        }
+
+        @keyframes brandPulse {
+            0% { opacity: 0.7; text-shadow: 0 0 8px var(--neon-pink), 0 0 15px #ffffff; }
+            100% { opacity: 1; text-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-pink), 0 0 35px #ffffff; }
         }
 
         .app-container {
@@ -85,7 +91,7 @@
             padding: 0 15px;
         }
 
-        /* Cover Welcome Landing Page */
+        /* Cover Welcome Landing Page with Button Shifted Down */
         .cover-view {
             width: 100%;
             max-width: 420px;
@@ -98,20 +104,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
             position: relative;
             margin-bottom: 20px;
             background-size: cover;
             background-position: center;
-        }
-
-        .cover-overlay {
-            position: absolute;
-            bottom: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+            padding-bottom: 30px; /* Shifted down into celestial base */
         }
 
         .start-btn {
@@ -125,13 +123,14 @@
             cursor: pointer;
             box-shadow: 0 0 25px rgba(255, 42, 133, 0.6);
             transition: all 0.3s ease;
+            transform: translateY(15px); /* Extra 20-25mm down adjustment */
         }
         .start-btn:hover {
-            transform: scale(1.05);
+            transform: translateY(15px) scale(1.05);
             box-shadow: 0 0 35px rgba(0, 243, 255, 0.8);
         }
 
-        /* Stage Navigation Tabs (Hidden on Cover) */
+        /* Stage Navigation Tabs */
         .nav-tabs {
             display: flex;
             gap: 8px;
@@ -360,9 +359,7 @@
 
         <!-- Cover Welcome Landing Page -->
         <div class="cover-view" id="coverView">
-            <div class="cover-overlay">
-                <button class="start-btn" onclick="startDesigning()">✨ Start Designing ✨</button>
-            </div>
+            <button class="start-btn" onclick="startDesigning()">✨ Start Designing ✨</button>
         </div>
 
         <!-- Main Canvas Viewport -->
@@ -374,13 +371,13 @@
             <video id="closingVideo" src="lighter mp4_2.mp4" playsinline muted loop></video>
         </div>
 
-        <!-- Control Panel (Hidden on Cover) -->
+        <!-- Control Panel -->
         <div class="control-panel hidden" id="controlPanel">
             <div class="control-row">
                 <label class="btn btn-cyan" style="cursor: pointer;">
                     📁 Upload Image <input type="file" id="imageUpload" accept="image/*" class="hidden">
                 </label>
-                <button class="btn" onclick="triggerSparkSound()">⚡ Spark Audio</button>
+                <button class="btn" onclick="playCoinSound()">🪙 Coin Audio</button>
                 <button class="btn" id="lockBtn" onclick="toggleBoxLock()">🔒 Box: Locked</button>
             </div>
 
@@ -407,7 +404,7 @@
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
                 <!-- Replace with your actual Web3Forms access key -->
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -432,15 +429,13 @@
             closing: 'closing_2.png'
         };
 
-        let currentStage = 0; // 0:Cover, 1:Example, 2:T1, 3:T2, 4:Closing
+        let currentStage = 0;
         const loadedImages = {};
         let imagesLoadedCount = 0;
         const totalImagesToLoad = Object.keys(ASSETS).length;
 
-        // Image & Fixed Box State
         let userImg = null;
         let imgX = 420, imgY = 560, imgW = 220, imgH = 240;
-        // Fixed target boundary box coordinates on Templates 1 & 2
         const targetBox = { x: 420, y: 700, w: 220, h: 240 };
         let isBoxLocked = true;
         let isDraggingImage = false;
@@ -461,21 +456,24 @@
         const controlPanel = document.getElementById('controlPanel');
         const navTabs = document.getElementById('navTabs');
 
-        // Web Audio API for Spark Click & Sticky Snap Popping
+        // Web Audio API for Coin / Chime Sounds
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function triggerSparkSound() {
+        function playCoinSound() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.05);
+            [987.77, 1318.51].forEach((freq, idx) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }, idx * 80);
+            });
         }
 
         function playSnapPop() {
@@ -547,7 +545,7 @@
         }
 
         function startDesigning() {
-            triggerSparkSound();
+            playCoinSound();
             coverView.classList.add('hidden');
             stageBox.classList.remove('hidden');
             controlPanel.classList.remove('hidden');
@@ -572,10 +570,9 @@
                     ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
                 }
 
-                // Render User Image on Templates 1 & 2
+                // Render User Image on Templates 1 & 2 (No Code-Generated Ghost Boxes)
                 if (currentStage >= 2 && userImg) {
                     ctx.save();
-                    // Neon Dragging Trail / Glow effect
                     let trailGlow = isSnapped ? 20 : (isOutOfBounds ? 15 : 8);
                     ctx.shadowColor = isOutOfBounds ? '#ff2a85' : (isSnapped ? '#00ff66' : '#00f3ff');
                     ctx.shadowBlur = trailGlow;
@@ -583,7 +580,7 @@
                     ctx.restore();
                 }
 
-                // Heartbeat Neon Glow highlight on original "HERE" text area
+                // Heartbeat Neon Glow highlight on original template "HERE" text area
                 if (currentStage >= 2) {
                     ctx.save();
                     let herePulse = 15 + Math.sin(pulseTimer * 3) * 8;
@@ -599,11 +596,11 @@
             requestAnimationFrame(mainLoop);
         }
 
-        // Closing Stage Flame Lowered by ~10mm (~35px down)
+        // Closing Stage Flame Lowered by 3 to 5 mm (~20px lower than previous)
         function renderClosingEffects() {
             ctx.save();
             let fx = 420 + flameSway;
-            let fy = 595; // Adjusted lower by 35px (~10mm)
+            let fy = 615; // Nudged down perfectly to clear fingernail
 
             let grad = ctx.createRadialGradient(fx, fy - 30, 5, fx, fy - 30, 70);
             grad.addColorStop(0, 'rgba(255, 165, 0, 0.6)');
@@ -687,7 +684,7 @@
                         imgY = targetBox.y;
                         document.getElementById('imgWidthSlider').value = imgW;
                         document.getElementById('imgHeightSlider').value = imgH;
-                        triggerSparkSound();
+                        playCoinSound();
                     };
                     userImg.src = event.target.result;
                 };
@@ -695,7 +692,6 @@
             }
         });
 
-        // Image Dimension Controls (Width x Height)
         function updateImageWidth(val) {
             imgW = parseInt(val);
             let inchesW = (imgW / 88).toFixed(1);
@@ -715,7 +711,6 @@
             let ih = (imgH / 88).toFixed(1);
             document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
 
-            // Distance check to target box for sticky snap & warning buzzer
             let dist = Math.hypot(imgX - targetBox.x, imgY - targetBox.y);
             if (dist < 40) {
                 if (!isSnapped) {
@@ -742,10 +737,9 @@
             isBoxLocked = !isBoxLocked;
             const btn = document.getElementById('lockBtn');
             btn.innerText = isBoxLocked ? '🔒 Box: Locked' : '🔓 Box: Unlocked';
-            triggerSparkSound();
+            playCoinSound();
         }
 
-        // Canvas Mouse Dragging Interaction with Sticky Snap
         canvas.addEventListener('mousedown', (e) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
@@ -792,37 +786,4 @@
         });
 
         function openOrderModal() { document.getElementById('orderModal').style.display = 'flex'; }
-        function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
-
-        function submitOrder(event) {
-            event.preventDefault();
-            const form = document.getElementById('orderForm');
-            const formData = new FormData(form);
-            const object = Object.fromEntries(formData);
-            const json = JSON.stringify(object);
-
-            fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: json
-            })
-            .then(async (response) => {
-                let jsonRes = await response.json();
-                if (response.status === 200) {
-                    playVictoryChime();
-                    alert("🎉 Success! Your custom lighter wrap order has been submitted successfully to HisNHerFlames.com!");
-                    closeOrderModal();
-                } else {
-                    alert(jsonRes.message || "Something went wrong. Please check your Web3Forms access key.");
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                alert("Submission failed. Please check your internet connection.");
-            });
-        }
-
-        window.onload = initAssets;
-    </script>
-</body>
-</html>
+        function closeOrderModal() { document.getElementById('order
