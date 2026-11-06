@@ -58,7 +58,7 @@
             100% { transform: translateY(-250px); }
         }
 
-        /* Floating Celestial Neon Thank You (Video Stage Only, Shifted Left 35mm) */
+        /* Floating Celestial Neon Thank You (Right Side, Video Stage Only) */
         .celestial-video-thankyou {
             position: fixed;
             right: 180px;
@@ -79,6 +79,49 @@
         @keyframes videoThankPulse {
             0% { opacity: 0.6; transform: translateY(-50%) scale(0.96); text-shadow: 0 0 10px var(--neon-pink), 0 0 20px #ffffff; }
             100% { opacity: 1; transform: translateY(-50%) scale(1.05); text-shadow: 0 0 20px var(--neon-pink), 0 0 35px var(--neon-cyan), 0 0 50px #ffffff; }
+        }
+
+        /* Left-Side Glowing Neon Legal & Quality Disclaimer Ticker (Stages 3, 4, & 5) */
+        .celestial-legal-ticker {
+            position: fixed;
+            left: 40px;
+            top: 15%;
+            width: 330px;
+            height: 70vh;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+        }
+
+        .disclaimer-track {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            /* Negative delay (-18s) skips the off-screen crawl so text is instantly visible when displayed */
+            animation: scrollDisclaimer 55s linear infinite;
+            animation-delay: -18s;
+        }
+
+        .disclaimer-text {
+            font-size: 16px; /* Larger font size for enhanced legibility */
+            line-height: 1.7;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-pink);
+            background: linear-gradient(135deg, #ffffff, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: left;
+        }
+
+        @keyframes scrollDisclaimer {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
         }
 
         .app-container {
@@ -169,7 +212,7 @@
         /* Stage Navigation Tabs */
         .nav-tabs {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 20px;
             flex-wrap: wrap;
             justify-content: center;
@@ -180,9 +223,9 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #aaa;
-            padding: 8px 14px;
+            padding: 8px 12px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -385,6 +428,25 @@
 
     <div class="stars"></div>
     <div class="celestial-video-thankyou" id="videoThankYou">Thank You!</div>
+    
+    <!-- Left-Side Legal & Quality Disclaimer Ticker (Starts at Stage 3 / Template 2 through Stage 5) -->
+    <div class="celestial-legal-ticker" id="legalTicker">
+        <div class="disclaimer-track">
+            <div class="disclaimer-text">✦ <strong>THANK YOU FOR CHOOSING HISNHERFLAMES.COM</strong> to design your custom lighter wrap!</div>
+            <div class="disclaimer-text">✦ <strong>TEMPLATE ACCURACY:</strong> Using our provided templates ensures maximum fitment precision and ease of processing. High-resolution PNG image uploads are highly recommended for optimal results.</div>
+            <div class="disclaimer-text">✦ <strong>TEXT & FONT NOTICE:</strong> While custom fonts are available, they are not required or recommended as they can crowd natural image elements.</div>
+            <div class="disclaimer-text">✦ <strong>QUALITY CONTROL & APPROVAL:</strong> All image uploads are subject to final review and quality control. HisNHerFlames.com retains final approval or rejection rights over any design rendering or purchase request.</div>
+            <div class="disclaimer-text">✦ <strong>PAYMENT & FULFILLMENT:</strong> If a design is not approved, no payment will be processed. Upon successful approval and payment received, a confirmation email with tracking details will follow. Custom pricing is subject to adjustment based on order specifications.</div>
+            <div class="disclaimer-text">✦ <strong>MOCKUP DISCLAIMER:</strong> Real-time digital previews are for animation and design guidance only; physical deliverables may vary. Our featured video showcase represents expected production quality.</div>
+            <div class="disclaimer-text">✦ <strong>AGE RESTRICTION (18+):</strong> Use of this design studio, creation tool, and final checkout process is strictly restricted to individuals 18 years of age or older in compliance with all applicable laws.</div>
+            <div class="disclaimer-text" style="margin-top: 15px; border-top: 1px solid rgba(0, 243, 255, 0.3); padding-top: 15px;">
+                ✦ <strong>We appreciate your time & patience,</strong><br>
+                <em>"Your brand in every flame, your flame in every candle"</em><br><br>
+                <strong>HisNHerFlames.com</strong><br>
+                <span>(support team)</span>
+            </div>
+        </div>
+    </div>
 
     <div class="app-container">
         <!-- Navigation Tabs -->
@@ -392,7 +454,8 @@
             <button class="tab-btn active" onclick="switchStage(1)">1. Example</button>
             <button class="tab-btn" onclick="switchStage(2)">2. Template 1</button>
             <button class="tab-btn" onclick="switchStage(3)">3. Template 2</button>
-            <button class="tab-btn" onclick="switchStage(4)">4. Closing</button>
+            <button class="tab-btn" onclick="switchStage(4)">4. BIC Preview</button>
+            <button class="tab-btn" onclick="switchStage(5)">5. Closing</button>
         </div>
 
         <!-- Cover Welcome Landing Page Container -->
@@ -416,7 +479,7 @@
 
         <!-- Control Panel -->
         <div class="control-panel hidden" id="controlPanel">
-            <div class="control-row">
+            <div class="control-row" id="editorControlsRow">
                 <label class="btn btn-cyan" style="cursor: pointer;">
                     📁 Upload Image <input type="file" id="imageUpload" accept="image/*" class="hidden">
                 </label>
@@ -424,12 +487,12 @@
                 <button class="btn" id="lockBtn" onclick="toggleBoxLock()">🔒 Box: Locked</button>
             </div>
 
-            <div class="slider-group">
+            <div class="slider-group" id="widthSliderGroup">
                 <div class="slider-label"><span>Image Width (Inches)</span><span id="imgWVal">2.5"</span></div>
                 <input type="range" id="imgWidthSlider" min="50" max="400" value="220" oninput="updateImageWidth(this.value)">
             </div>
 
-            <div class="slider-group">
+            <div class="slider-group" id="heightSliderGroup">
                 <div class="slider-label"><span>Image Height (Inches)</span><span id="imgHVal">2.7"</span></div>
                 <input type="range" id="imgHeightSlider" min="50" max="400" value="240" oninput="updateImageHeight(this.value)">
             </div>
@@ -506,6 +569,7 @@
         const controlPanel = document.getElementById('controlPanel');
         const navTabs = document.getElementById('navTabs');
         const videoThankYou = document.getElementById('videoThankYou');
+        const legalTicker = document.getElementById('legalTicker');
 
         // Web Audio API & Ambient Holiday Music Synthesizer
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -513,7 +577,6 @@
         function playAmbientHolidayMusic() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             
-            // Warm, cozy holiday chord frequencies (Mellow bell/synth pads in mid-low range)
             const chordFrequencies = [
                 [261.63, 329.63, 392.00], // C major
                 [220.00, 261.63, 329.63], // A minor
@@ -532,10 +595,9 @@
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     
-                    osc.type = 'sine'; // Soft, warm tone
+                    osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-                    // Gentle volume curve (mid-to-low range, very satisfying and ambient)
                     gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
                     gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 1.5);
                     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 5.5);
@@ -547,7 +609,6 @@
                     osc.stop(audioCtx.currentTime + 6.0);
                 });
 
-                // Loop the ambient progression every 5 seconds
                 setTimeout(playChord, 5000);
             }
 
@@ -629,12 +690,11 @@
         }
 
         function startDesigning() {
-            // Explicitly force audio context resumption for live servers
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
             playCoinSound();
-            playAmbientHolidayMusic(); // Starts warm, ambient holiday music loop seamlessly on click!
+            playAmbientHolidayMusic();
             coverContainer.classList.add('hidden');
             stageBox.classList.remove('hidden');
             controlPanel.classList.remove('hidden');
@@ -642,7 +702,6 @@
             switchStage(1);
         }
 
-        // Direct unblocked event binding guaranteeing immediate startup execution
         document.getElementById('startBtn').addEventListener('click', startDesigning);
 
         function mainLoop() {
@@ -651,18 +710,19 @@
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (currentStage === 4) {
+            if (currentStage === 5) {
                 if (loadedImages.closing && loadedImages.closing.complete) {
                     ctx.drawImage(loadedImages.closing, 0, 0, canvas.width, canvas.height);
                 }
                 renderClosingEffects();
+            } else if (currentStage === 4) {
+                renderMaxiBicShowcase();
             } else {
                 let bgKey = ['cover', 'example', 'template1', 'template2'][currentStage];
                 if (loadedImages[bgKey] && loadedImages[bgKey].complete) {
                     ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
                 }
 
-                // Render Independent Template Image safely
                 if (currentStage >= 2 && templateState[currentStage]) {
                     let st = templateState[currentStage];
                     if (st.userImg && st.userImg.complete) {
@@ -720,6 +780,115 @@
             ctx.restore();
         }
 
+        // Realistic 3D Maxi BIC Lighter Showcase
+        function renderMaxiBicShowcase() {
+            ctx.save();
+
+            let spotGrad = ctx.createRadialGradient(420, 560, 50, 420, 560, 380);
+            spotGrad.addColorStop(0, 'rgba(0, 243, 255, 0.25)');
+            spotGrad.addColorStop(0.6, 'rgba(255, 42, 133, 0.1)');
+            spotGrad.addColorStop(1, 'rgba(7, 7, 18, 0.95)');
+            ctx.fillStyle = spotGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            let bobY = Math.sin(pulseTimer * 1.8) * 12;
+            let tiltAngle = Math.cos(pulseTimer * 1.2) * 0.03;
+
+            ctx.translate(420, 560 + bobY);
+            ctx.rotate(tiltAngle);
+
+            let bodyW = 210;
+            let bodyH = 500;
+            let bodyX = -bodyW / 2;
+            let bodyY = -120;
+            let radius = 22;
+
+            let hoodW = 190;
+            let hoodH = 130;
+            let hoodX = -hoodW / 2;
+            let hoodY = bodyY - hoodH + 15;
+
+            let chromeGrad = ctx.createLinearGradient(hoodX, 0, hoodX + hoodW, 0);
+            chromeGrad.addColorStop(0, '#777');
+            chromeGrad.addColorStop(0.2, '#e6e6e6');
+            chromeGrad.addColorStop(0.5, '#ffffff');
+            chromeGrad.addColorStop(0.8, '#999');
+            chromeGrad.addColorStop(1, '#444');
+            ctx.fillStyle = chromeGrad;
+            ctx.beginPath();
+            ctx.roundRect(hoodX, hoodY, hoodW, hoodH, [16, 16, 0, 0]);
+            ctx.fill();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(hoodX + 35, hoodY + 30, 25, 55);
+            ctx.fillRect(hoodX + 82, hoodY + 30, 25, 55);
+            ctx.fillRect(hoodX + 130, hoodY + 30, 25, 55);
+
+            ctx.fillStyle = '#ff2020';
+            ctx.beginPath();
+            ctx.roundRect(hoodX + hoodW - 38, hoodY + 20, 30, 45, [4, 4, 0, 0]);
+            ctx.fill();
+
+            let wheelGrad = ctx.createLinearGradient(hoodX + 15, 0, hoodX + 45, 0);
+            wheelGrad.addColorStop(0, '#333');
+            wheelGrad.addColorStop(0.5, '#aaa');
+            wheelGrad.addColorStop(1, '#222');
+            ctx.fillStyle = wheelGrad;
+            ctx.fillRect(hoodX + 10, hoodY + 10, 32, 25);
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.roundRect(bodyX, bodyY, bodyW, bodyH, radius);
+            ctx.clip();
+
+            ctx.fillStyle = '#111122';
+            ctx.fillRect(bodyX, bodyY, bodyW, bodyH);
+
+            let activeUserImg = (templateState[2] && templateState[2].userImg) ? templateState[2].userImg : 
+                              ((templateState[3] && templateState[3].userImg) ? templateState[3].userImg : null);
+
+            if (activeUserImg && activeUserImg.complete) {
+                ctx.drawImage(activeUserImg, bodyX, bodyY, bodyW, bodyH);
+            } else {
+                ctx.fillStyle = 'rgba(255, 42, 133, 0.2)';
+                ctx.fillRect(bodyX, bodyY, bodyW, bodyH);
+                ctx.fillStyle = '#00f3ff';
+                ctx.font = 'bold 20px "Segoe UI"';
+                ctx.textAlign = 'center';
+                ctx.fillText('✨ YOUR CUSTOM WRAP ✨', 0, bodyY + bodyH / 2);
+            }
+
+            let cylGrad = ctx.createLinearGradient(bodyX, 0, bodyX + bodyW, 0);
+            cylGrad.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
+            cylGrad.addColorStop(0.15, 'rgba(0, 0, 0, 0.15)');
+            cylGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.25)');
+            cylGrad.addColorStop(0.65, 'rgba(0, 0, 0, 0.0)');
+            cylGrad.addColorStop(0.88, 'rgba(0, 0, 0, 0.2)');
+            cylGrad.addColorStop(1, 'rgba(0, 0, 0, 0.75)');
+
+            ctx.fillStyle = cylGrad;
+            ctx.fillRect(bodyX, bodyY, bodyW, bodyH);
+            ctx.restore();
+
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.6)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(bodyX, bodyY, bodyW, bodyH, radius);
+            ctx.stroke();
+
+            ctx.font = 'bold 24px "Segoe UI"';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = '#ff2a85';
+            ctx.shadowBlur = 15;
+            ctx.fillText('🔥 Your Custom Maxi BIC Wrap 🔥', 0, bodyY + bodyH + 50);
+
+            ctx.restore();
+        }
+
         // Anchored Flame & Smoke
         function renderClosingEffects() {
             ctx.save();
@@ -772,12 +941,12 @@
         function switchStage(stageIdx) {
             currentStage = stageIdx;
             videoThankYou.style.display = 'none';
+            legalTicker.style.display = 'none';
 
             document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
                 btn.classList.toggle('active', (idx + 1) === stageIdx);
             });
 
-            // Update Sliders to match current template's independent state
             if (templateState[currentStage]) {
                 let st = templateState[currentStage];
                 document.getElementById('imgWidthSlider').value = st.imgW;
@@ -786,37 +955,65 @@
                 document.getElementById('imgHVal').innerText = (st.imgH / 88).toFixed(1) + '"';
             }
 
-            if (currentStage === 4) {
+            const editorControls = document.getElementById('editorControlsRow');
+            const wSlider = document.getElementById('widthSliderGroup');
+            const hSlider = document.getElementById('heightSliderGroup');
+
+            if (currentStage === 5) {
+                inchHud.classList.add('hidden');
+                canvas.style.display = 'none';
+                video.style.display = 'block';
+                video.play();
+                videoThankYou.style.display = 'block';
+                legalTicker.style.display = 'block'; // Ticker active on Closing (Stage 5)
+                editorControls.style.display = 'none';
+                wSlider.style.display = 'none';
+                hSlider.style.display = 'none';
+                playVictoryChime();
+            } else if (currentStage === 4) {
                 inchHud.classList.add('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
-            } else if (currentStage >= 2) {
+                legalTicker.style.display = 'block'; // Ticker active on BIC Preview (Stage 4)
+                editorControls.style.display = 'none';
+                wSlider.style.display = 'none';
+                hSlider.style.display = 'none';
+                playCoinSound();
+            } else if (currentStage === 3) {
                 inchHud.classList.remove('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
+                legalTicker.style.display = 'block'; // Ticker starts right here on Template 2 (Stage 3)!
+                editorControls.style.display = 'flex';
+                wSlider.style.display = 'block';
+                hSlider.style.display = 'block';
+            } else if (currentStage === 2) {
+                inchHud.classList.remove('hidden');
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+                legalTicker.style.display = 'none'; // Template 1 (Stage 2)
+                editorControls.style.display = 'flex';
+                wSlider.style.display = 'block';
+                hSlider.style.display = 'block';
             } else {
                 inchHud.classList.add('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
+                legalTicker.style.display = 'none'; // Example (Stage 1)
+                editorControls.style.display = 'flex';
+                wSlider.style.display = 'block';
+                hSlider.style.display = 'block';
             }
         }
         window.switchStage = switchStage;
 
         function nextStage() {
-            if (currentStage < 4) {
+            if (currentStage < 5) {
                 switchStage(currentStage + 1);
-            } else {
-                canvas.style.display = 'none';
-                video.style.display = 'block';
-                video.play();
-                inchHud.classList.add('hidden');
-                videoThankYou.style.display = 'block';
-                playVictoryChime();
             }
         }
         window.nextStage = nextStage;
 
-        // Upload handler updates only the current active template independently
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file && templateState[currentStage]) {
