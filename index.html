@@ -1,960 +1,737 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HisNHerFlames - Custom Lighter Wraps Studio</title>
-  <style>
-    :root {
-      --bg-dark: #0a0812;
-      --accent-neon-pink: #ff007f;
-      --accent-neon-blue: #00f0ff;
-      --accent-neon-green: #00ff80;
-      --text-gold: #d4af37;
-      --card-bg: rgba(20, 16, 35, 0.85);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HisNHerFlames.com - Custom Lighter Wrap Studio</title>
+    <style>
+        :root {
+            --neon-pink: #ff2a85;
+            --neon-cyan: #00f3ff;
+            --neon-purple: #b000ff;
+            --bg-space: #070712;
+            --panel-bg: rgba(15, 15, 30, 0.85);
+            --border-glow: rgba(0, 243, 255, 0.4);
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body {
-      background-color: var(--bg-dark);
-      color: #ffffff;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      overflow-x: hidden;
-      min-height: 100vh;
-      position: relative;
-    }
+        body {
+            background-color: var(--bg-space);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            position: relative;
+            padding: 20px 0;
+        }
 
-    /* --- CELESTIAL BACKGROUND STARS --- */
-    #celestial-stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
+        /* Celestial Starry Background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, var(--neon-cyan), rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 160px 120px, var(--neon-pink), rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            opacity: 0.6;
+            animation: twinkle 8s infinite linear;
+            z-index: 0;
+        }
 
-    .star {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-neon-blue), 0 0 12px var(--accent-neon-pink);
-      animation: twinkle linear infinite;
-    }
+        @keyframes twinkle {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
+        }
 
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.2; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.3); }
-    }
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px;
+        }
 
-    /* --- VIEW MANAGEMENT --- */
-    .view-container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+        /* Stage Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-    .view-hidden {
-      display: none !important;
-    }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #aaa;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    .view-active {
-      display: flex !important;
-    }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: #fff;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(255, 42, 133, 0.5);
+            font-weight: 600;
+        }
 
-    /* --- COVER VIEW --- */
-    .cover-card {
-      position: relative;
-      max-width: 500px;
-      width: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(0, 240, 255, 0.3);
-      background: var(--card-bg);
-      text-align: center;
-    }
+        /* Canvas Wrapper & Stage Views */
+        .stage-box {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            height: 560px;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.25), inset 0 0 20px rgba(176, 0, 255, 0.15);
+            border: 2px solid var(--border-glow);
+            margin-bottom: 20px;
+        }
 
-    .cover-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-      cursor: pointer;
-    }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        canvas:active {
+            cursor: grabbing;
+        }
 
-    .btn-start-overlay {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 16px 36px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #fff;
-      background: linear-gradient(135deg, var(--accent-neon-pink), var(--accent-neon-blue));
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 0 15px var(--accent-neon-pink), 0 0 25px var(--accent-neon-blue);
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
 
-    .btn-start-overlay:hover {
-      transform: translateX(-50%) scale(1.08);
-      box-shadow: 0 0 25px var(--accent-neon-pink), 0 0 40px var(--accent-neon-blue);
-    }
+        /* HUD Inch Display Badge */
+        .inch-hud {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(7, 7, 18, 0.85);
+            border: 1px solid var(--neon-cyan);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 20;
+        }
+        .inch-hud.target-met {
+            border-color: #00ff66;
+            color: #00ff66;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.4);
+        }
 
-    /* --- NAVIGATION STEPS HEADER --- */
-    .step-nav {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+        /* Control Panel */
+        .control-panel {
+            width: 100%;
+            max-width: 420px;
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
 
-    .step-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
+        .control-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
 
-    .step-btn.active {
-      background: var(--accent-neon-pink);
-      border-color: var(--accent-neon-pink);
-      box-shadow: 0 0 10px var(--accent-neon-pink);
-    }
+        .btn {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
 
-    /* --- CANVAS & EDITOR STYLING --- */
-    .editor-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      max-width: 900px;
-      width: 100%;
-    }
+        .btn:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
+        }
 
-    .canvas-container {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-      background: #000;
-      max-width: 500px;
-      width: 100%;
-    }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            border: none;
+            box-shadow: 0 0 15px rgba(255, 42, 133, 0.4);
+        }
 
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      touch-action: none;
-    }
+        .btn-cyan {
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            border: none;
+        }
 
-    /* NEON PULSING TEXT OVERLAY FOR TEMPLATE 1 */
-    .neon-pulse-here {
-      position: absolute;
-      top: 195px;
-      right: 45px;
-      font-size: 2.8rem;
-      font-weight: 900;
-      color: var(--accent-neon-blue);
-      text-shadow: 0 0 5px var(--accent-neon-blue), 0 0 10px var(--accent-neon-blue), 0 0 20px var(--accent-neon-blue);
-      animation: neonGlow 2s infinite alternate;
-      pointer-events: none;
-    }
+        /* Sliders */
+        .slider-group {
+            margin-bottom: 12px;
+        }
 
-    @keyframes neonGlow {
-      0% { opacity: 0.6; text-shadow: 0 0 5px var(--accent-neon-blue), 0 0 10px var(--accent-neon-blue); }
-      100% { opacity: 1; text-shadow: 0 0 10px var(--accent-neon-blue), 0 0 25px var(--accent-neon-blue), 0 0 35px var(--accent-neon-pink); }
-    }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
 
-    .boundary-badge {
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      display: none;
-      z-index: 5;
-    }
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--neon-pink);
+            background: rgba(255,255,255,0.1);
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
 
-    .badge-out {
-      background: rgba(255, 0, 128, 0.9);
-      color: #fff;
-      box-shadow: 0 0 10px var(--accent-neon-pink);
-    }
+        /* Custom Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-space);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--neon-pink), var(--neon-cyan));
+            border-radius: 4px;
+        }
 
-    .badge-in {
-      background: rgba(0, 255, 128, 0.9);
-      color: #000;
-      box-shadow: 0 0 10px var(--accent-neon-green);
-    }
+        /* Modal Overlay for Order Form */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    /* --- TOOLBAR CONTROLS --- */
-    .controls-panel {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 500px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+        .modal-card {
+            background: #111125;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.3);
+        }
 
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--neon-cyan);
+            text-align: center;
+        }
 
-    .btn-action {
-      flex: 1;
-      padding: 10px 15px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px rgba(255, 42, 133, 0.3);
+        }
 
-    .btn-action:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .slider-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .slider-group label {
-      font-size: 0.85rem;
-      color: #aaa;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent-neon-pink);
-    }
-
-    /* --- FINALE & VIDEO SHOWCASE --- */
-    .finale-card {
-      position: relative;
-      max-width: 500px;
-      width: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 25px rgba(255, 0, 128, 0.4);
-      background: var(--card-bg);
-    }
-
-    .video-card {
-      position: relative;
-      max-width: 500px;
-      width: 100%;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
-      border: 2px solid var(--accent-neon-blue);
-    }
-
-    video {
-      width: 100%;
-      display: block;
-    }
-
-    /* --- MODALS --- */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 20px;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      border: 1px solid var(--accent-neon-pink);
-      border-radius: 12px;
-      padding: 25px;
-      max-width: 450px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      box-shadow: 0 0 25px var(--accent-neon-pink);
-    }
-
-    .modal-content input, .modal-content textarea {
-      width: 100%;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      border-radius: 6px;
-    }
-  </style>
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
-  <!-- PERSISTENT CELESTIAL BACKGROUND -->
-  <div id="celestial-stars"></div>
+    <div class="stars"></div>
 
-  <!-- VIEW 1: COVER -->
-  <div id="cover-view" class="view-container view-active">
-    <div class="cover-card">
-      <img id="cover-img-click" src="cover-image_2.png" alt="HisNHerFlames Cover" />
-      <button id="btn-start-designing" class="btn-start-overlay">Start Design</button>
-    </div>
-  </div>
-
-  <!-- VIEW 2: CUSTOMIZER STUDIO (EXAMPLE, TEMPLATE 1, TEMPLATE 2) -->
-  <div id="customizer-view" class="view-container view-hidden">
-    <div class="editor-wrapper">
-      
-      <!-- STEP NAVIGATION -->
-      <div class="step-nav">
-        <button class="step-btn active" data-template="example">1. Design Showcase</button>
-        <button class="step-btn" data-template="template1">2. Template 1</button>
-        <button class="step-btn" data-template="template2">3. Template 2 (2.5x2.7")</button>
-      </div>
-
-      <!-- CANVAS DISPLAY CONTAINER -->
-      <div class="canvas-container">
-        <div id="boundary-warning" class="boundary-badge badge-out">⚠️ Outside 2.5x2.7" Margin</div>
-        <div id="neon-here-text" class="neon-pulse-here" style="display:none;">HERE</div>
-        <canvas id="lighter-canvas" width="600" height="800"></canvas>
-      </div>
-
-      <!-- EDITOR CONTROLS PANEL -->
-      <div class="controls-panel">
-        <div class="btn-row">
-          <button id="btn-upload-image" class="btn-action">📁 Upload Image</button>
-          <button id="btn-add-text" class="btn-action">✍️ Add Text</button>
-          <button id="btn-lock-box" class="btn-action">🔓 Box: Unlocked</button>
+    <div class="app-container">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchStage(0)">1. Cover</button>
+            <button class="tab-btn" onclick="switchStage(1)">2. Example</button>
+            <button class="tab-btn" onclick="switchStage(2)">3. Template 1</button>
+            <button class="tab-btn" onclick="switchStage(3)">4. Template 2</button>
+            <button class="tab-btn" onclick="switchStage(4)">5. Closing</button>
         </div>
 
-        <input type="file" id="image-upload" accept="image/*" style="display:none;" />
-        <input type="text" id="text-input" placeholder="Type text here..." style="display:none;" />
-
-        <div class="slider-group">
-          <label>Image/Text Scale (Scroll wheel enabled on Canvas)</label>
-          <input type="range" id="scale-slider" min="0.2" max="3" step="0.05" value="1" />
+        {/* Main Canvas Viewport */}
+        <div class="stage-box" id="stageBox">
+            <div id="inchHud" class="inch-hud hidden">
+                <span>📏 <span id="hudDims">2.5" × 2.7"</span></span>
+            </div>
+            <canvas id="customCanvas" width="840" height="1120"></canvas>
+            <video id="closingVideo" src="lighter mp4_2.mp4" playsinline muted loop></video>
         </div>
 
-        <div class="slider-group">
-          <label>Boundary Box Width</label>
-          <input type="range" id="box-width-slider" min="100" max="500" value="260" />
+        {/* Control Panel */}
+        <div class="control-panel">
+            <div class="control-row">
+                <label class="btn btn-cyan" style="cursor: pointer;">
+                    📁 Upload Image <input type="file" id="imageUpload" accept="image/*" class="hidden">
+                </label>
+                <button class="btn" onclick="triggerPopSound()">🔊 Audio Pop</button>
+                <button class="btn" id="lockBtn" onclick="toggleBoxLock()">🔓 Box: Unlocked</button>
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Image Scale / Zoom</span><span id="scaleVal">100%</span></div>
+                <input type="range" id="imgScaleSlider" min="10" max="300" value="100" oninput="updateImageScale(this.value)">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Box Width (Inches)</span><span id="boxWVal">2.5"</span></div>
+                <input type="range" id="boxWidthSlider" min="50" max="350" value="220" oninput="updateBoxWidth(this.value)">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label"><span>Box Height (Inches)</span><span id="boxHVal">2.7"</span></div>
+                <input type="range" id="boxHeightSlider" min="50" max="350" value="240" oninput="updateBoxHeight(this.value)">
+            </div>
+
+            <div class="control-row" style="margin-top: 15px; margin-bottom: 0;">
+                <button class="btn btn-primary" onclick="openOrderModal()">🚀 Submit Order</button>
+                <button class="btn" id="nextStageBtn" onclick="nextStage()">Next Stage ➡️</button>
+            </div>
         </div>
+    </div>
 
-        <div class="slider-group">
-          <label>Boundary Box Height</label>
-          <input type="range" id="box-height-slider" min="100" max="500" value="310" />
+    {/* Order Submission Modal */}
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-card">
+            <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
+            <form id="orderForm" onsubmit="submitOrder(event)">
+                <!-- Replace with your actual Web3Forms access key -->
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
+                <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
+                
+                <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
+                <input type="email" name="email" class="form-input" placeholder="Your Email Address" required>
+                <input type="tel" name="phone" class="form-input" placeholder="Phone Number">
+                <textarea name="notes" class="form-input" placeholder="Custom engraving or color notes..." rows="3"></textarea>
+                
+                <div class="control-row" style="margin-top: 15px;">
+                    <button type="button" class="btn" onclick="closeOrderModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send Order</button>
+                </div>
+            </form>
         </div>
-
-        <div class="btn-row">
-          <button id="btn-delete-element" class="btn-action" style="display:none; color:#ff4d4d;">🗑️ Delete Layer</button>
-          <button id="btn-preview-design" class="btn-action">👁️ Preview</button>
-          <button id="btn-submit-design" class="btn-action" style="background:var(--accent-neon-pink);">🚀 Submit Order</button>
-          <button id="btn-go-finale" class="btn-action" style="background:var(--accent-neon-blue); color:#000;">Next Stage ➡️</button>
-        </div>
-      </div>
-
     </div>
-  </div>
 
-  <!-- VIEW 3: CLOSING SHOWCASE -->
-  <div id="finale-view" class="view-container view-hidden">
-    <div class="editor-wrapper">
-      <h2 style="color:var(--text-gold); text-shadow:0 0 10px var(--text-gold);">Wrap Completed</h2>
-      <div class="finale-card">
-        <img src="closing_2.png" alt="Closing Showcase" style="width:100%; display:block;" />
-      </div>
-      <div class="btn-row" style="margin-top:15px;">
-        <button id="btn-back-to-studio" class="btn-action">⬅️ Back to Studio</button>
-        <button id="btn-go-video" class="btn-action" style="background:var(--accent-neon-blue); color:#000;">View Final Video 🎬</button>
-      </div>
-    </div>
-  </div>
+    <script>
+        // --- ASSET CONFIGURATION (.png mappings) ---
+        const ASSETS = {
+            cover: 'cover-image_2.png',
+            example: 'example-image_2.png',
+            template1: 'template-1_2.png',
+            template2: 'template-2.png',
+            closing: 'closing_2.png'
+        };
 
-  <!-- VIEW 4: OPTIONAL VIDEO SHOWCASE -->
-  <div id="video-view" class="view-container view-hidden">
-    <div class="editor-wrapper">
-      <h2 style="color:var(--accent-neon-blue); text-shadow:0 0 15px var(--accent-neon-blue);">Final Experience</h2>
-      <div class="video-card">
-        <video id="final-video" controls loop autoplay muted>
-          <source src="lighter mp4_2.mp4" type="video/mp4" />
-          Your browser does not support video playback.
-        </video>
-      </div>
-      <button id="btn-back-from-video" class="btn-action" style="margin-top:15px;">⬅️ Return to Closing</button>
-    </div>
-  </div>
+        let currentStage = 0; // 0:Cover, 1:Example, 2:T1, 3:T2, 4:Closing
+        const loadedImages = {};
+        let imagesLoadedCount = 0;
+        const totalImagesToLoad = Object.keys(ASSETS).length;
 
-  <!-- MODAL: PREVIEW -->
-  <div id="modal-preview" class="modal-overlay modal-hidden" style="display:none;">
-    <div class="modal-content">
-      <h3>Design Snapshot</h3>
-      <img id="preview-img-element" style="width:100%; border-radius:8px;" />
-      <button id="btn-close-preview-modal" class="btn-action">Close</button>
-    </div>
-  </div>
+        // Interactive Object State (for Templates 1 & 2)
+        let userImg = null;
+        let imgX = 250, imgY = 350, imgScale = 1;
+        let boxX = 250, boxY = 600, boxW = 220, boxH = 240;
+        let isBoxLocked = false;
+        let isDraggingImage = false;
+        let isDraggingBox = false;
+        let startX, startY;
 
-  <!-- MODAL: SUBMIT ORDER -->
-  <div id="modal-submit" class="modal-overlay modal-hidden" style="display:none;">
-    <div class="modal-content">
-      <h3>Submit Your Lighter Wrap Request</h3>
-      <form id="order-form">
-        <input type="hidden" id="canvas-data-url" />
-        <input type="text" id="user-name" placeholder="Your Name" required />
-        <input type="email" id="user-email" placeholder="Your Email Address" required />
-        <textarea id="order-notes" rows="3" placeholder="Order Notes / Quantity / Specifics"></textarea>
-        <button type="submit" id="btn-send-email" class="btn-action" style="background:var(--accent-neon-green); color:#000;">Send Design & Request Quote</button>
-        <button type="button" id="btn-close-submit-modal" class="btn-action">Cancel</button>
-      </form>
-    </div>
-  </div>
+        // Animation & Pulse Phase
+        let pulseTimer = 0;
+        let flameSway = 0;
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('customCanvas');
+        const ctx = canvas.getContext('2d');
+        const video = document.getElementById('closingVideo');
+        const inchHud = document.getElementById('inchHud');
 
-      // --- WEB3FORMS CONFIGURATION ---
-      const web3FormsKey = "YOUR_WEB3FORMS_ACCESS_KEY_HERE";
-
-      // --- PERSISTENT CELESTIAL BACKGROUND STARS ---
-      const starContainer = document.getElementById('celestial-stars');
-      if (starContainer) {
-        for (let i = 0; i < 50; i++) {
-          const star = document.createElement('div');
-          star.classList.add('star');
-          const size = Math.random() * 3 + 1;
-          star.style.width = `${size}px`;
-          star.style.height = `${size}px`;
-          star.style.left = `${Math.random() * 100}vw`;
-          star.style.top = `${Math.random() * 100}vh`;
-          star.style.animationDuration = `${Math.random() * 6 + 3}s`;
-          star.style.animationDelay = `${Math.random() * 4}s`;
-          starContainer.appendChild(star);
-        }
-      }
-
-      // --- WEB AUDIO API: POPPING SNAP EFFECT ---
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      function playPopSound() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.08);
-      }
-
-      // --- VIEWS MANAGEMENT ---
-      const views = {
-        cover: document.getElementById('cover-view'),
-        customizer: document.getElementById('customizer-view'),
-        finale: document.getElementById('finale-view'),
-        video: document.getElementById('video-view')
-      };
-
-      function switchView(targetKey) {
-        Object.keys(views).forEach(key => {
-          if (key === targetKey) {
-            views[key].classList.remove('view-hidden');
-            views[key].classList.add('view-active');
-          } else {
-            views[key].classList.remove('view-active');
-            views[key].classList.add('view-hidden');
-          }
-        });
-        window.scrollTo(0, 0);
-      }
-
-      // Button Navigations
-      document.getElementById('btn-start-designing').addEventListener('click', () => switchView('customizer'));
-      document.getElementById('cover-img-click').addEventListener('click', () => switchView('customizer'));
-      document.getElementById('btn-go-finale').addEventListener('click', () => switchView('finale'));
-      document.getElementById('btn-back-to-studio').addEventListener('click', () => switchView('customizer'));
-      document.getElementById('btn-go-video').addEventListener('click', () => switchView('video'));
-      document.getElementById('btn-back-from-video').addEventListener('click', () => switchView('finale'));
-
-      // --- ASSETS & TEMPLATE CONFIGURATIONS ---
-      const ASSETS = {
-        example: 'example-image_2.jpg',
-        template1: 'template-1_2.jpg',
-        template2: 'template-2.png'
-      };
-
-      const TEMPLATE_CONFIG = {
-        example: { interactive: false, box: { x: 0, y: 0, w: 0, h: 0 } },
-        template1: { interactive: true, box: { x: 260, y: 440, w: 260, h: 310 } },
-        template2: { interactive: true, box: { x: 170, y: 180, w: 260, h: 320 } }
-      };
-
-      let currentTemplateKey = 'example';
-      let bgImage = new Image();
-      bgImage.src = ASSETS[currentTemplateKey];
-
-      const canvas = document.getElementById('lighter-canvas');
-      const ctx = canvas.getContext('2d');
-      const warningBadge = document.getElementById('boundary-warning');
-      const neonHereText = document.getElementById('neon-here-text');
-
-      let layers = [];
-      let selectedLayerIndex = null;
-      let isBoxLocked = false;
-      let isDragging = false;
-      let dragOffsetX = 0;
-      let dragOffsetY = 0;
-      let pulseNeon = 0;
-      let hasSnapped = false;
-
-      // --- STEP SWITCHING ---
-      const stepBtns = document.querySelectorAll('.step-btn');
-      stepBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          stepBtns.forEach(b => b.classList.remove('active'));
-          e.target.classList.add('active');
-          currentTemplateKey = e.target.getAttribute('data-template');
-          bgImage.src = ASSETS[currentTemplateKey];
-
-          if (currentTemplateKey === 'template1') {
-            neonHereText.style.display = 'block';
-          } else {
-            neonHereText.style.display = 'none';
-          }
-
-          const box = TEMPLATE_CONFIG[currentTemplateKey].box;
-          if (TEMPLATE_CONFIG[currentTemplateKey].interactive) {
-            document.getElementById('box-width-slider').value = box.w;
-            document.getElementById('box-height-slider').value = box.h;
-          }
-
-          bgImage.onload = () => renderCanvas();
-        });
-      });
-
-      // Lock Button
-      const lockBtn = document.getElementById('btn-lock-box');
-      lockBtn.addEventListener('click', () => {
-        isBoxLocked = !isBoxLocked;
-        lockBtn.innerText = isBoxLocked ? '🔒 Box: Locked (Move Box)' : '🔓 Box: Unlocked (Move Image)';
-        lockBtn.style.borderColor = isBoxLocked ? '#00ff80' : 'rgba(255,255,255,0.2)';
-      });
-
-      // --- BOUNDARY STATUS & SNAP EFFECT ---
-      function checkBoundaryStatus() {
-        const config = TEMPLATE_CONFIG[currentTemplateKey];
-        if (!config.interactive || selectedLayerIndex === null) {
-          warningBadge.style.display = 'none';
-          return true;
+        // Web Audio API for Pop Snap & Victory Chime
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function triggerPopSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
         }
 
-        const layer = layers[selectedLayerIndex];
-        const box = config.box;
-        const lWidth = layer.width * layer.scale;
-        const lHeight = layer.height * layer.scale;
-
-        const isInside = (
-          layer.x >= box.x &&
-          layer.y >= box.y &&
-          layer.x + lWidth <= box.x + box.w &&
-          layer.y + lHeight <= box.y + box.h
-        );
-
-        // Snap logic for Template 2
-        if (currentTemplateKey === 'template2' && isInside && !hasSnapped) {
-          playPopSound();
-          if (navigator.vibrate) navigator.vibrate(50);
-          hasSnapped = true;
-        } else if (!isInside) {
-          hasSnapped = false;
+        function playVictoryChime() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                }, idx * 90);
+            });
         }
 
-        if (!isInside) {
-          warningBadge.style.display = 'block';
-          warningBadge.className = 'boundary-badge badge-out';
-          warningBadge.innerText = '⚠️ Outside 2.5x2.7" Margin';
-          return false;
-        } else {
-          warningBadge.style.display = 'block';
-          warningBadge.className = 'boundary-badge badge-in';
-          warningBadge.innerText = '✅ Perfect 2.5x2.7" Fit';
-          return true;
-        }
-      }
-
-      // --- RENDER CANVAS ---
-      function renderCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (bgImage.complete && bgImage.naturalWidth !== 0) {
-          ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-        }
-
-        const config = TEMPLATE_CONFIG[currentTemplateKey];
-
-        if (config.interactive) {
-          pulseNeon += 0.05;
-          const neonAlpha = 0.4 + Math.sin(pulseNeon) * 0.3;
-          const isInsideBox = checkBoundaryStatus();
-          const box = config.box;
-
-          // Render Dashed Boundary Box
-          ctx.save();
-          ctx.strokeStyle = isInsideBox ? `rgba(0, 255, 128, ${0.7 + neonAlpha * 0.3})` : `rgba(255, 0, 128, ${0.5 + neonAlpha * 0.5})`;
-          ctx.lineWidth = 3;
-          ctx.setLineDash([8, 6]);
-          ctx.shadowColor = isInsideBox ? '#00ff80' : '#ff0080';
-          ctx.shadowBlur = 12;
-          ctx.strokeRect(box.x, box.y, box.w, box.h);
-          ctx.restore();
-        } else {
-          warningBadge.style.display = 'none';
+        // Load Images
+        function initAssets() {
+            for (let key in ASSETS) {
+                loadedImages[key] = new Image();
+                loadedImages[key].src = ASSETS[key];
+                loadedImages[key].onload = () => {
+                    imagesLoadedCount++;
+                    if (imagesLoadedCount === totalImagesToLoad) {
+                        requestAnimationFrame(mainLoop);
+                    }
+                };
+                loadedImages[key].onerror = () => {
+                    console.warn("Asset load warning for: " + ASSETS[key]);
+                    imagesLoadedCount++;
+                    if (imagesLoadedCount === totalImagesToLoad) {
+                        requestAnimationFrame(mainLoop);
+                    }
+                };
+            }
         }
 
-        // Render Layers
-        layers.forEach((layer, index) => {
-          ctx.save();
-          const w = layer.width * layer.scale;
-          const h = layer.height * layer.scale;
+        // Main Animation & Render Loop
+        function mainLoop() {
+            pulseTimer += 0.05;
+            flameSway = Math.sin(pulseTimer * 1.5) * 8;
 
-          if (layer.type === 'image') {
-            ctx.drawImage(layer.img, layer.x, layer.y, w, h);
-          } else if (layer.type === 'text') {
-            const fontSize = 32 * layer.scale;
-            ctx.font = `bold ${fontSize}px sans-serif`;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (currentStage === 4) {
+                // Closing Stage background image
+                if (loadedImages.closing && loadedImages.closing.complete) {
+                    ctx.drawImage(loadedImages.closing, 0, 0, canvas.width, canvas.height);
+                }
+                renderClosingEffects();
+            } else {
+                // Render corresponding asset background
+                let bgKey = ['cover', 'example', 'template1', 'template2'][currentStage];
+                if (loadedImages[bgKey] && loadedImages[bgKey].complete) {
+                    ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
+                }
+
+                // Render User Image & Boundary Box on Templates 1 & 2
+                if (currentStage >= 2) {
+                    if (userImg) {
+                        ctx.save();
+                        ctx.translate(imgX, imgY);
+                        ctx.scale(imgScale, imgScale);
+                        ctx.drawImage(userImg, -userImg.width / 2, -userImg.height / 2);
+                        ctx.restore();
+                    }
+
+                    // Draw Boundary Box with Neon Glow & Inch Target Check
+                    ctx.save();
+                    let glowIntensity = 10 + Math.sin(pulseTimer * 2) * 6;
+                    ctx.shadowColor = '#00f3ff';
+                    ctx.shadowBlur = glowIntensity;
+                    ctx.strokeStyle = '#00f3ff';
+                    ctx.lineWidth = 3;
+                    ctx.setLineDash([8, 6]);
+                    ctx.strokeRect(boxX - boxW / 2, boxY - boxH / 2, boxW, boxH);
+                    ctx.restore();
+
+                    // Heartbeat Neon Glow highlight on original "HERE" text area
+                    ctx.save();
+                    let herePulse = 15 + Math.sin(pulseTimer * 3) * 8;
+                    ctx.shadowColor = '#00f3ff';
+                    ctx.shadowBlur = herePulse;
+                    ctx.strokeStyle = 'rgba(0, 243, 255, 0.4)';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(320, 420, 180, 80);
+                    ctx.restore();
+                }
+            }
+
+            requestAnimationFrame(mainLoop);
+        }
+
+        // Render 3D Swaying Flame & Double-Lit Candle Smoke on Closing Stage
+        function renderClosingEffects() {
+            ctx.save();
+            // Lighter Flame at top tip (~X: 420, Y: 580)
+            let fx = 420 + flameSway;
+            let fy = 560;
+
+            // Outer Glow Aura
+            let grad = ctx.createRadialGradient(fx, fy - 30, 5, fx, fy - 30, 70);
+            grad.addColorStop(0, 'rgba(255, 165, 0, 0.6)');
+            grad.addColorStop(0.5, 'rgba(255, 69, 0, 0.2)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(fx, fy - 30, 70, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Flame Core (3D Swaying Shape)
+            ctx.fillStyle = '#ffcc00';
+            ctx.beginPath();
+            ctx.moveTo(fx, fy - 80);
+            ctx.bezierCurveTo(fx + 25 + flameSway*0.5, fy - 40, fx + 15, fy - 10, fx, fy);
+            ctx.bezierCurveTo(fx - 15, fy - 10, fx - 25 - flameSway*0.5, fy - 40, fx, fy - 80);
+            ctx.fill();
+
             ctx.fillStyle = '#ffffff';
-            ctx.textBaseline = 'top';
-            ctx.fillText(layer.text, layer.x, layer.y);
-          }
+            ctx.beginPath();
+            ctx.moveTo(fx, fy - 60);
+            ctx.bezierCurveTo(fx + 8, fy - 35, fx + 5, fy - 20, fx, fy - 10);
+            ctx.bezierCurveTo(fx - 5, fy - 20, fx - 8, fy - 35, fx, fy - 60);
+            ctx.fill();
 
-          if (index === selectedLayerIndex) {
-            ctx.strokeStyle = '#00ff80';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([]);
-            ctx.strokeRect(layer.x - 2, layer.y - 2, w + 4, h + 4);
-          }
-          ctx.restore();
+            // Candle Smoke (Rising from side wicks)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+            for (let i = 0; i < 3; i++) {
+                let sx = 280 + i * 120 + Math.sin(pulseTimer + i) * 15;
+                let sy = 680 - ((pulseTimer * 40 + i * 50) % 180);
+                let sr = 8 + ((pulseTimer * 10 + i * 20) % 25);
+                ctx.beginPath();
+                ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        // Stage Navigation
+        function switchStage(stageIdx) {
+            currentStage = stageIdx;
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === stageIdx);
+            });
+
+            if (currentStage === 4) {
+                inchHud.classList.add('hidden');
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+            } else if (currentStage >= 2) {
+                inchHud.classList.remove('hidden');
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+            } else {
+                inchHud.classList.add('hidden');
+                canvas.style.display = 'block';
+                video.style.display = 'none';
+            }
+        }
+
+        function nextStage() {
+            if (currentStage < 4) {
+                switchStage(currentStage + 1);
+            } else {
+                // Transition to Final 3D MP4 Video Showcase
+                canvas.style.display = 'none';
+                video.style.display = 'block';
+                video.play();
+                inchHud.classList.add('hidden');
+                playVictoryChime();
+            }
+        }
+
+        // Image Upload Handling
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    userImg = new Image();
+                    userImg.onload = function() {
+                        imgScale = 1;
+                        document.getElementById('imgScaleSlider').value = 100;
+                        document.getElementById('scaleVal').innerText = '100%';
+                        triggerPopSound();
+                    };
+                    userImg.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
         });
-      }
 
-      function animLoop() {
-        renderCanvas();
-        requestAnimationFrame(animLoop);
-      }
-      requestAnimationFrame(animLoop);
-
-      // --- CANVAS SCROLL WHEEL SCALING ---
-      canvas.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        if (selectedLayerIndex !== null) {
-          const delta = e.deltaY < 0 ? 0.05 : -0.05;
-          const currentScale = layers[selectedLayerIndex].scale;
-          const newScale = Math.min(Math.max(currentScale + delta, 0.2), 3);
-          layers[selectedLayerIndex].scale = newScale;
-          document.getElementById('scale-slider').value = newScale;
+        // Controls & Resizing
+        function updateImageScale(val) {
+            imgScale = val / 100;
+            document.getElementById('scaleVal').innerText = val + '%';
         }
-      }, { passive: false });
 
-      // --- UPLOAD & TEXT HANDLERS ---
-      const fileInput = document.getElementById('image-upload');
-      document.getElementById('btn-upload-image').addEventListener('click', () => fileInput.click());
-
-      fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            const config = TEMPLATE_CONFIG[currentTemplateKey];
-            const box = config.interactive ? config.box : { x: 150, y: 200, w: 300, h: 300 };
-            const targetWidth = Math.min(180, box.w * 0.7);
-            const targetHeight = (targetWidth * img.height) / img.width;
-
-            const newLayer = {
-              id: Date.now(),
-              type: 'image',
-              img: img,
-              x: box.x + (box.w - targetWidth) / 2,
-              y: box.y + (box.h - targetHeight) / 2,
-              width: targetWidth,
-              height: targetHeight,
-              scale: 1
-            };
-            layers.push(newLayer);
-            selectedLayerIndex = layers.length - 1;
-            updateUIControls();
-          };
-          img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-
-      document.getElementById('btn-add-text').addEventListener('click', () => {
-        const config = TEMPLATE_CONFIG[currentTemplateKey];
-        const box = config.interactive ? config.box : { x: 150, y: 200, w: 300, h: 300 };
-        const newLayer = {
-          id: Date.now(),
-          type: 'text',
-          text: 'CUSTOM WRAP',
-          x: box.x + 20,
-          y: box.y + 40,
-          width: 160,
-          height: 32,
-          scale: 1
-        };
-        layers.push(newLayer);
-        selectedLayerIndex = layers.length - 1;
-        updateUIControls();
-      });
-
-      // Sliders Controls
-      document.getElementById('scale-slider').addEventListener('input', (e) => {
-        if (selectedLayerIndex !== null) layers[selectedLayerIndex].scale = parseFloat(e.target.value);
-      });
-
-      document.getElementById('box-width-slider').addEventListener('input', (e) => {
-        const config = TEMPLATE_CONFIG[currentTemplateKey];
-        if (config.interactive) config.box.w = parseInt(e.target.value);
-      });
-
-      document.getElementById('box-height-slider').addEventListener('input', (e) => {
-        const config = TEMPLATE_CONFIG[currentTemplateKey];
-        if (config.interactive) config.box.h = parseInt(e.target.value);
-      });
-
-      const textInput = document.getElementById('text-input');
-      textInput.addEventListener('input', (e) => {
-        if (selectedLayerIndex !== null && layers[selectedLayerIndex].type === 'text') {
-          layers[selectedLayerIndex].text = e.target.value;
+        function updateBoxWidth(val) {
+            boxW = parseInt(val);
+            let inchesW = (boxW / 88).toFixed(1);
+            document.getElementById('boxWVal').innerText = inchesW + '"';
+            checkInchTarget();
         }
-      });
 
-      const deleteBtn = document.getElementById('btn-delete-element');
-      deleteBtn.addEventListener('click', () => {
-        if (selectedLayerIndex !== null) {
-          layers.splice(selectedLayerIndex, 1);
-          selectedLayerIndex = null;
-          updateUIControls();
+        function updateBoxHeight(val) {
+            boxH = parseInt(val);
+            let inchesH = (boxH / 88).toFixed(1);
+            document.getElementById('boxHVal').innerText = inchesH + '"';
+            checkInchTarget();
         }
-      });
 
-      function updateUIControls() {
-        if (selectedLayerIndex !== null) {
-          const layer = layers[selectedLayerIndex];
-          deleteBtn.style.display = 'block';
-          if (layer.type === 'text') {
-            textInput.style.display = 'block';
-            textInput.value = layer.text;
-          } else {
-            textInput.style.display = 'none';
-          }
-          document.getElementById('scale-slider').value = layer.scale;
-        } else {
-          deleteBtn.style.display = 'none';
-          textInput.style.display = 'none';
-          warningBadge.style.display = 'none';
+        function checkInchTarget() {
+            let iw = (boxW / 88).toFixed(1);
+            let ih = (boxH / 88).toFixed(1);
+            document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
+            if (Math.abs(iw - 2.5) <= 0.2 && Math.abs(ih - 2.7) <= 0.2) {
+                inchHud.classList.add('target-met');
+            } else {
+                inchHud.classList.remove('target-met');
+            }
         }
-      }
 
-      // --- DRAG / TOUCH EVENTS ---
-      function getCanvasCoordinates(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-          x: (clientX - rect.left) * (canvas.width / rect.width),
-          y: (clientY - rect.top) * (canvas.height / rect.height)
-        };
-      }
-
-      function hitTest(coords) {
-        for (let i = layers.length - 1; i >= 0; i--) {
-          const layer = layers[i];
-          const w = layer.width * layer.scale;
-          const h = layer.height * layer.scale;
-          if (
-            coords.x >= layer.x &&
-            coords.x <= layer.x + w &&
-            coords.y >= layer.y &&
-            coords.y <= layer.y + h
-          ) {
-            return i;
-          }
+        function toggleBoxLock() {
+            isBoxLocked = !isBoxLocked;
+            const btn = document.getElementById('lockBtn');
+            btn.innerText = isBoxLocked ? '🔒 Box: Locked' : '🔓 Box: Unlocked';
+            triggerPopSound();
         }
-        return null;
-      }
 
-      function handleStart(e) {
-        const coords = getCanvasCoordinates(e);
-        const hitIndex = hitTest(coords);
+        // Canvas Mouse Dragging Interaction
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
 
-        if (hitIndex !== null) {
-          selectedLayerIndex = hitIndex;
-          isDragging = true;
-          dragOffsetX = coords.x - layers[hitIndex].x;
-          dragOffsetY = coords.y - layers[hitIndex].y;
-        } else {
-          selectedLayerIndex = null;
-        }
-        updateUIControls();
-      }
-
-      function handleMove(e) {
-        if (!isDragging) return;
-        const coords = getCanvasCoordinates(e);
-        const config = TEMPLATE_CONFIG[currentTemplateKey];
-
-        if (isBoxLocked && config.interactive) {
-          config.box.x = coords.x - dragOffsetX;
-          config.box.y = coords.y - dragOffsetY;
-        } else if (selectedLayerIndex !== null) {
-          layers[selectedLayerIndex].x = coords.x - dragOffsetX;
-          layers[selectedLayerIndex].y = coords.y - dragOffsetY;
-          checkBoundaryStatus();
-        }
-      }
-
-      function handleEnd() {
-        isDragging = false;
-      }
-
-      canvas.addEventListener('mousedown', handleStart);
-      canvas.addEventListener('mousemove', handleMove);
-      window.addEventListener('mouseup', handleEnd);
-
-      canvas.addEventListener('touchstart', handleStart, { passive: true });
-      canvas.addEventListener('touchmove', handleMove, { passive: true });
-      window.addEventListener('touchend', handleEnd);
-
-      // --- MODALS & WEB3FORMS SUBMISSION ---
-      const modalPreview = document.getElementById('modal-preview');
-      const modalSubmit = document.getElementById('modal-submit');
-
-      document.getElementById('btn-preview-design').addEventListener('click', () => {
-        selectedLayerIndex = null;
-        renderCanvas();
-        document.getElementById('preview-img-element').src = canvas.toDataURL('image/png');
-        modalPreview.style.display = 'flex';
-      });
-
-      document.getElementById('btn-close-preview-modal').addEventListener('click', () => {
-        modalPreview.style.display = 'none';
-      });
-
-      document.getElementById('btn-submit-design').addEventListener('click', () => {
-        selectedLayerIndex = null;
-        renderCanvas();
-        document.getElementById('canvas-data-url').value = canvas.toDataURL('image/png');
-        modalSubmit.style.display = 'flex';
-      });
-
-      document.getElementById('btn-close-submit-modal').addEventListener('click', () => {
-        modalSubmit.style.display = 'none';
-      });
-
-      document.getElementById('order-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const sendBtn = document.getElementById('btn-send-email');
-        sendBtn.innerText = 'Sending Request...';
-        sendBtn.disabled = true;
-
-        // Package up detailed customizer layers metadata & form inputs into Web3Forms JSON payload
-        const processedLayers = layers.map(layer => ({
-          type: layer.type,
-          x: Math.round(layer.x),
-          y: Math.round(layer.y),
-          scale: layer.scale,
-          text: layer.type === 'text' ? layer.text : null
-        }));
-
-        const payload = {
-          access_key: web3FormsKey,
-          subject: "New Custom Lighter Wrap Order Request - HisNHerFlames",
-          name: document.getElementById('user-name').value,
-          email: document.getElementById('user-email').value,
-          message: document.getElementById('order-notes').value,
-          active_template: currentTemplateKey,
-          boundary_box: JSON.stringify(TEMPLATE_CONFIG[currentTemplateKey].box),
-          layer_coordinates: JSON.stringify(processedLayers),
-          design_snapshot: document.getElementById('canvas-data-url').value
-        };
-
-        // Web3Forms fetch POST (Zero page refresh)
-        fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify(payload)
-        })
-        .then(async (response) => {
-          const json = await response.json();
-          if (response.status == 200) {
-            alert('Success! Your custom lighter wrap design request has been submitted.');
-            modalSubmit.style.display = 'none';
-            this.reset();
-          } else {
-            console.error('Web3Forms Error:', json);
-            alert(json.message || 'Submission failed. Please check your Web3Forms Access Key.');
-          }
-        })
-        .catch(error => {
-          console.error('Network Error:', error);
-          alert('Oops! There was a network problem submitting your design.');
-        })
-        .finally(() => {
-          sendBtn.innerText = 'Send Design & Request Quote';
-          sendBtn.disabled = false;
+            if (!isBoxLocked && Math.abs(mouseX - boxX) < boxW / 2 && Math.abs(mouseY - boxY) < boxH / 2) {
+                isDraggingBox = true;
+            } else {
+                isDraggingImage = true;
+            }
+            startX = mouseX;
+            startY = mouseY;
         });
-      });
 
-    });
-  </script>
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingImage && !isDraggingBox) return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+            const dx = mouseX - startX;
+            const dy = mouseY - startY;
+
+            if (isDraggingBox) {
+                boxX += dx;
+                boxY += dy;
+            } else if (isDraggingImage) {
+                imgX += dx;
+                imgY += dy;
+            }
+            startX = mouseX;
+            startY = mouseY;
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDraggingImage = false;
+            isDraggingBox = false;
+        });
+
+        // Order Modal Functions
+        function openOrderModal() {
+            document.getElementById('orderModal').style.display = 'flex';
+        }
+        function closeOrderModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        // Web3Forms Submission
+        function submitOrder(event) {
+            event.preventDefault();
+            const form = document.getElementById('orderForm');
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            })
+            .then(async (response) => {
+                let jsonRes = await response.json();
+                if (response.status === 200) {
+                    playVictoryChime();
+                    alert("🎉 Success! Your custom lighter wrap order has been submitted successfully to HisNHerFlames.com!");
+                    closeOrderModal();
+                } else {
+                    alert(jsonRes.message || "Something went wrong. Please check your Web3Forms access key.");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Submission failed. Please check your internet connection.");
+            });
+        }
+
+        // Initialize App on Load
+        window.onload = initAssets;
+    </script>
 </body>
 </html>
