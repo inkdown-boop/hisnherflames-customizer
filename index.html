@@ -446,7 +446,7 @@
         <div class="modal-card">
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -507,8 +507,53 @@
         const navTabs = document.getElementById('navTabs');
         const videoThankYou = document.getElementById('videoThankYou');
 
-        // Web Audio API
+        // Web Audio API & Ambient Holiday Music Synthesizer
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playAmbientHolidayMusic() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            // Warm, cozy holiday chord frequencies (Mellow bell/synth pads in mid-low range)
+            const chordFrequencies = [
+                [261.63, 329.63, 392.00], // C major
+                [220.00, 261.63, 329.63], // A minor
+                [174.61, 220.00, 261.63], // F major
+                [196.00, 246.94, 293.66]  // G major
+            ];
+            
+            let chordIndex = 0;
+
+            function playChord() {
+                if (audioCtx.state === 'closed') return;
+                const notes = chordFrequencies[chordIndex];
+                chordIndex = (chordIndex + 1) % chordFrequencies.length;
+
+                notes.forEach(freq => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = 'sine'; // Soft, warm tone
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                    // Gentle volume curve (mid-to-low range, very satisfying and ambient)
+                    gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 1.5);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 5.5);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(audioCtx.currentTime);
+                    osc.stop(audioCtx.currentTime + 6.0);
+                });
+
+                // Loop the ambient progression every 5 seconds
+                setTimeout(playChord, 5000);
+            }
+
+            playChord();
+        }
+
         function playCoinSound() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             [987.77, 1318.51].forEach((freq, idx) => {
@@ -585,6 +630,7 @@
 
         function startDesigning() {
             playCoinSound();
+            playAmbientHolidayMusic(); // Starts warm, ambient holiday music loop seamlessly on click!
             coverContainer.classList.add('hidden');
             stageBox.classList.remove('hidden');
             controlPanel.classList.remove('hidden');
