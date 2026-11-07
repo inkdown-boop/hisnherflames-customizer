@@ -725,7 +725,6 @@
         let combineShowcaseEnabled = true;
         let lastWarningTime = 0;
 
-        // Original precise template coordinates restored
         const templateState = {
             2: { text: "HisNHerFlames", font: "Segoe UI", color: "#00f3ff", glow: "glow", angle: 0, alpha: 1.0, size: 32, textX: 575, textY: 760 },
             3: { userImg: null, imgX: 420, imgY: 660, imgW: 220, imgH: 240 }
@@ -733,9 +732,9 @@
 
         function getActiveTargetBox() {
             if (currentStage === 3) {
-                return { x: 420, y: 660, w: 220, h: 240 }; // Template 2 Box
+                return { x: 420, y: 660, w: 220, h: 240 };
             }
-            return { x: 575, y: 760, w: 220, h: 240 }; // Template 1 Box
+            return { x: 575, y: 760, w: 220, h: 240 };
         }
 
         let isBoxLocked = true;
@@ -807,7 +806,7 @@
                 btn.style.borderColor = "var(--neon-cyan)";
                 btn.style.color = "#fff";
                 if (audioCtx.state === 'suspended') audioCtx.resume();
-                playAmbientHolidayMusic(); // Instantly restart music loop when unmuted
+                playAmbientHolidayMusic();
             }
         }
         window.toggleAudioMute = toggleAudioMute;
@@ -897,7 +896,9 @@
         }
 
         function startDesigning() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
             playCoinSound();
             playAmbientHolidayMusic();
             coverContainer.classList.add('hidden');
@@ -998,7 +999,6 @@
             requestAnimationFrame(mainLoop);
         }
 
-        // Render 4-Way Box Boundary Guide Arrows at original positions
         function renderBoxBoundaryGuides() {
             ctx.save();
             let arrowPulse = 5 + Math.sin(pulseTimer * 4) * 4;
@@ -1054,7 +1054,6 @@
             ctx.restore();
         }
 
-        // Realistic 3D Maxi BIC Lighter Showcase
         function renderMaxiBicShowcase() {
             ctx.save();
 
@@ -1180,7 +1179,6 @@
             ctx.restore();
         }
 
-        // Anchored Flame & Smoke
         function renderClosingEffects() {
             ctx.save();
             let fx = 420;
@@ -1242,7 +1240,6 @@
             const textControls = document.getElementById('textCustomizerBox');
             const wSlider = document.getElementById('widthSliderGroup');
             const hSlider = document.getElementById('heightSliderGroup');
-            const editorControls = document.getElementById('editorControlsRow');
 
             if (currentStage === 2 && templateState[2]) {
                 modeBanner.innerText = "✍️ Template 1: Text Only Studio";
@@ -1275,7 +1272,6 @@
                 video.play();
                 videoThankYou.style.display = 'block';
                 legalTicker.style.display = 'block';
-                editorControls.style.display = 'none';
                 textControls.style.display = 'none';
                 imgRow.style.display = 'none';
                 wSlider.style.display = 'none';
@@ -1286,7 +1282,6 @@
                 canvas.style.display = 'block';
                 video.style.display = 'none';
                 legalTicker.style.display = 'block';
-                editorControls.style.display = 'none';
                 textControls.style.display = 'none';
                 imgRow.style.display = 'none';
                 wSlider.style.display = 'none';
@@ -1297,7 +1292,6 @@
                 canvas.style.display = 'block';
                 video.style.display = 'none';
                 legalTicker.style.display = 'block';
-                editorControls.style.display = 'flex';
                 imgRow.style.display = 'flex';
                 textControls.style.display = 'none';
                 wSlider.style.display = 'block';
@@ -1307,7 +1301,6 @@
                 canvas.style.display = 'block';
                 video.style.display = 'none';
                 legalTicker.style.display = 'none';
-                editorControls.style.display = 'flex';
                 imgRow.style.display = 'none';
                 textControls.style.display = 'block';
                 wSlider.style.display = 'none';
@@ -1317,7 +1310,6 @@
                 canvas.style.display = 'block';
                 video.style.display = 'none';
                 legalTicker.style.display = 'none';
-                editorControls.style.display = 'flex';
                 imgRow.style.display = 'none';
                 textControls.style.display = 'none';
                 wSlider.style.display = 'none';
@@ -1426,7 +1418,6 @@
         }
         window.updateImageHeight = updateImageHeight;
 
-        // Rubber-band soft warning check using original coordinates
         function checkBounds() {
             let targetBox = getActiveTargetBox();
             
