@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HisNHerFlames.com - Custom Lighter Wrap Studio</title>
+    <!-- Import Google Handwriting & Script Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Dancing+Script:wght@700&family=Great+Vibes&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon-pink: #ff2a85;
@@ -102,13 +104,12 @@
             display: flex;
             flex-direction: column;
             gap: 28px;
-            /* Negative delay (-18s) skips the off-screen crawl so text is instantly visible when displayed */
             animation: scrollDisclaimer 55s linear infinite;
             animation-delay: -18s;
         }
 
         .disclaimer-text {
-            font-size: 16px; /* Larger font size for enhanced legibility */
+            font-size: 16px;
             line-height: 1.7;
             font-weight: 600;
             color: #ffffff;
@@ -175,7 +176,6 @@
             box-shadow: 0 0 35px rgba(0, 243, 255, 0.8);
         }
 
-        /* Centered Branding & Tagline Under Start Button */
         .cover-brand-box {
             margin-top: 18px;
             text-align: center;
@@ -213,7 +213,7 @@
         .nav-tabs {
             display: flex;
             gap: 6px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -237,6 +237,48 @@
             font-weight: 600;
         }
 
+        /* Top Action Bar */
+        .top-action-bar {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .top-action-bar.hidden { display: none !important; }
+
+        .reset-btn {
+            background: rgba(255, 42, 133, 0.15);
+            border: 1px solid var(--neon-pink);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 0 10px rgba(255, 42, 133, 0.3);
+            transition: all 0.2s ease;
+        }
+        .reset-btn:hover {
+            background: rgba(255, 42, 133, 0.35);
+            box-shadow: 0 0 15px rgba(255, 42, 133, 0.6);
+        }
+
+        .template-mode-banner {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            padding: 5px 12px;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+        }
+
         /* Canvas Wrapper & Stage Views */
         .stage-box {
             position: relative;
@@ -249,6 +291,11 @@
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.25), inset 0 0 20px rgba(176, 0, 255, 0.15);
             border: 2px solid var(--border-glow);
             margin-bottom: 20px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stage-box.out-of-bounds-flash {
+            border-color: var(--neon-pink) !important;
+            box-shadow: 0 0 35px rgba(255, 42, 133, 0.8), inset 0 0 25px rgba(255, 42, 133, 0.5) !important;
         }
         .stage-box.hidden { display: none !important; }
 
@@ -267,7 +314,7 @@
             display: none;
         }
 
-        /* HUD Inch Display Badge */
+        /* Real-Time Measurement HUD Display Badge */
         .inch-hud {
             position: absolute;
             top: 15px;
@@ -294,7 +341,13 @@
         .inch-hud.out-of-bounds {
             border-color: #ff2a85;
             color: #ff2a85;
-            box-shadow: 0 0 12px rgba(255, 42, 133, 0.6);
+            box-shadow: 0 0 12px rgba(255, 42, 133, 0.8);
+            animation: hudAlertPulse 0.6s infinite alternate;
+        }
+
+        @keyframes hudAlertPulse {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 42, 133, 0.6); }
+            100% { transform: scale(1.06); box-shadow: 0 0 20px rgba(255, 42, 133, 1); }
         }
 
         /* Control Panel */
@@ -314,7 +367,7 @@
         .control-row {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .btn {
@@ -347,15 +400,38 @@
             border: none;
         }
 
-        .slider-group {
+        .toggle-btn-combine {
+            background: rgba(176, 0, 255, 0.2);
+            border: 1px solid var(--neon-purple);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
             margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .toggle-btn-combine.active-combine {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(176, 0, 255, 0.6);
+        }
+
+        .slider-group {
+            margin-bottom: 10px;
         }
         .slider-label {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
             color: #ccc;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         input[type="range"] {
             width: 100%;
@@ -364,6 +440,52 @@
             height: 6px;
             border-radius: 3px;
             outline: none;
+        }
+
+        /* Text Customizer Panel Styling */
+        .text-customizer-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .text-customizer-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .text-input-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            margin-bottom: 8px;
+        }
+        .text-input-field:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 8px rgba(255, 42, 133, 0.4);
+        }
+        .select-field {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 8px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+        }
+        .select-field option {
+            background: #111125;
+            color: #fff;
         }
 
         /* Custom Scrollbar */
@@ -429,13 +551,13 @@
     <div class="stars"></div>
     <div class="celestial-video-thankyou" id="videoThankYou">Thank You!</div>
     
-    <!-- Left-Side Legal & Quality Disclaimer Ticker (Starts at Stage 3 / Template 2 through Stage 5) -->
+    <!-- Left-Side Legal & Quality Disclaimer Ticker -->
     <div class="celestial-legal-ticker" id="legalTicker">
         <div class="disclaimer-track">
             <div class="disclaimer-text">✦ <strong>THANK YOU FOR CHOOSING HISNHERFLAMES.COM</strong> to design your custom lighter wrap!</div>
-            <div class="disclaimer-text">✦ <strong>TEMPLATE ACCURACY:</strong> Using our provided templates ensures maximum fitment precision and ease of processing. High-resolution PNG image uploads are highly recommended for optimal results.</div>
-            <div class="disclaimer-text">✦ <strong>TEXT & FONT NOTICE:</strong> While custom fonts are available, they are not required or recommended as they can crowd natural image elements.</div>
-            <div class="disclaimer-text">✦ <strong>QUALITY CONTROL & APPROVAL:</strong> All image uploads are subject to final review and quality control. HisNHerFlames.com retains final approval or rejection rights over any design rendering or purchase request.</div>
+            <div class="disclaimer-text">✦ <strong>TEMPLATE ACCURACY:</strong> Template 1 is dedicated for Text customizer with 360° rotation and opacity slider, while Template 2 is dedicated for Image uploads with snap-in box boundary constraints.</div>
+            <div class="disclaimer-text">✦ <strong>AUDIO CONTROL:</strong> Use the optional Mute Audio button at any time to toggle ambient holiday synth music and sound effects on or off.</div>
+            <div class="disclaimer-text">✦ <strong>QUALITY CONTROL & APPROVAL:</strong> All image and text submissions are subject to final review and quality control. HisNHerFlames.com retains final approval or rejection rights over any design rendering or purchase request.</div>
             <div class="disclaimer-text">✦ <strong>PAYMENT & FULFILLMENT:</strong> If a design is not approved, no payment will be processed. Upon successful approval and payment received, a confirmation email with tracking details will follow. Custom pricing is subject to adjustment based on order specifications.</div>
             <div class="disclaimer-text">✦ <strong>MOCKUP DISCLAIMER:</strong> Real-time digital previews are for animation and design guidance only; physical deliverables may vary. Our featured video showcase represents expected production quality.</div>
             <div class="disclaimer-text">✦ <strong>AGE RESTRICTION (18+):</strong> Use of this design studio, creation tool, and final checkout process is strictly restricted to individuals 18 years of age or older in compliance with all applicable laws.</div>
@@ -449,11 +571,17 @@
     </div>
 
     <div class="app-container">
-        <!-- Navigation Tabs -->
+        <!-- Navigation Tabs & Top Action Bar -->
+        <div class="top-action-bar hidden" id="topActionBar">
+            <button class="reset-btn" onclick="resetDraft()">🔄 Start Fresh</button>
+            <button class="reset-btn" id="audioMuteBtn" onclick="toggleAudioMute()" style="background: rgba(0, 243, 255, 0.15); border-color: var(--neon-cyan);">🔊 Audio: ON</button>
+            <div class="template-mode-banner" id="modeBanner">✍️ Template 1: Text Only Studio</div>
+        </div>
+
         <div class="nav-tabs hidden" id="navTabs">
             <button class="tab-btn active" onclick="switchStage(1)">1. Example</button>
-            <button class="tab-btn" onclick="switchStage(2)">2. Template 1</button>
-            <button class="tab-btn" onclick="switchStage(3)">3. Template 2</button>
+            <button class="tab-btn" onclick="switchStage(2)">2. Template 1 (Text)</button>
+            <button class="tab-btn" onclick="switchStage(3)">3. Template 2 (Image)</button>
             <button class="tab-btn" onclick="switchStage(4)">4. BIC Preview</button>
             <button class="tab-btn" onclick="switchStage(5)">5. Closing</button>
         </div>
@@ -479,12 +607,69 @@
 
         <!-- Control Panel -->
         <div class="control-panel hidden" id="controlPanel">
-            <div class="control-row" id="editorControlsRow">
+            
+            <!-- Global Showcase Combination Toggle -->
+            <button class="toggle-btn-combine active-combine" id="combineToggleBtn" onclick="toggleCombineShowcase()">
+                ⚡ Combined Text + Image Preview: ENABLED
+            </button>
+
+            <!-- Image Upload Row (Template 2 Only) -->
+            <div class="control-row" id="imageUploadRow">
                 <label class="btn btn-cyan" style="cursor: pointer;">
                     📁 Upload Image <input type="file" id="imageUpload" accept="image/*" class="hidden">
                 </label>
                 <button class="btn" onclick="playCoinSound()">🪙 Coin Audio</button>
                 <button class="btn" id="lockBtn" onclick="toggleBoxLock()">🔒 Box: Locked</button>
+            </div>
+
+            <!-- 360° Custom Text Tool Engine (Template 1 Only) -->
+            <div class="text-customizer-box" id="textCustomizerBox">
+                <div class="text-customizer-title">✍️ Template 1: 360° Custom Text Engine</div>
+                <input type="text" id="customTextInput" class="text-input-field" placeholder="Type custom wrap text here..." oninput="updateCustomText(this.value)">
+                
+                <div class="control-row" style="margin-bottom: 8px;">
+                    <select id="fontFamilySelect" class="select-field" onchange="updateFontFamily(this.value)">
+                        <option value="Segoe UI">Segoe UI (Modern)</option>
+                        <option value="Caveat">Caveat (Handwritten Cursive)</option>
+                        <option value="Great Vibes">Great Vibes (Script)</option>
+                        <option value="Pacifico">Pacifico (Casual)</option>
+                        <option value="Dancing Script">Dancing Script (Flowing)</option>
+                        <option value="Brush Script MT">Brush Script (Classic)</option>
+                        <option value="Impact">Impact (Heavy)</option>
+                        <option value="Courier New">Courier New (Mono)</option>
+                    </select>
+
+                    <select id="fontColorSelect" class="select-field" onchange="updateFontColor(this.value)">
+                        <option value="#00f3ff">Neon Cyan</option>
+                        <option value="#ff2a85">Neon Pink</option>
+                        <option value="#ffcc00">Gold Amber</option>
+                        <option value="#ffffff">Pure White</option>
+                        <option value="#00ff66">Emerald Green</option>
+                        <option value="#000000">True Black</option>
+                    </select>
+                </div>
+
+                <div class="control-row" style="margin-bottom: 8px;">
+                    <select id="fontGlowSelect" class="select-field" onchange="updateFontGlow(this.value)">
+                        <option value="glow">✨ Neon Glow Mode</option>
+                        <option value="solid">⬛ Solid Matte Mode</option>
+                    </select>
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label"><span>Text Size (Inches)</span><span id="textSzVal">0.4"</span></div>
+                    <input type="range" id="fontSizeSlider" min="15" max="75" value="32" oninput="updateFontSize(this.value)">
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label"><span>360° Text Rotation Angle</span><span id="textAngleVal">0°</span></div>
+                    <input type="range" id="textAngleSlider" min="0" max="360" value="0" oninput="updateTextAngle(this.value)">
+                </div>
+
+                <div class="slider-group" style="margin-bottom: 0;">
+                    <div class="slider-label"><span>Text Transparency (Alpha)</span><span id="textAlphaVal">100%</span></div>
+                    <input type="range" id="textAlphaSlider" min="10" max="100" value="100" oninput="updateTextAlpha(this.value)">
+                </div>
             </div>
 
             <div class="slider-group" id="widthSliderGroup">
@@ -504,12 +689,12 @@
         </div>
     </div>
 
-    <!-- Order Submission Modal -->
+    <!-- Order Submission Modal (Bulletproof Web3Forms Integration) -->
     <div class="modal-overlay" id="orderModal">
         <div class="modal-card">
             <div class="modal-title">✨ Submit Your Custom Wrap Order ✨</div>
             <form id="orderForm" onsubmit="submitOrder(event)">
-                <input type="hidden" name="access_key" value="b480c314-9f09-4888-86df-2c771afe15ab">
+                <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_HERE">
                 <input type="hidden" name="subject" value="New Lighter Wrap Custom Order - HisNHerFlames.com">
                 
                 <input type="text" name="name" class="form-input" placeholder="Your Full Name" required>
@@ -536,23 +721,27 @@
 
         let currentStage = 0;
         const loadedImages = {};
+        let isAudioMuted = false;
+        let combineShowcaseEnabled = true;
+        let lastWarningTime = 0;
 
-        // Independent state tracking with exact arrow target coordinates (Screenshots 19 & 20 markup)
+        // Original precise template coordinates restored
         const templateState = {
-            2: { userImg: null, imgX: 575, imgY: 760, imgW: 220, imgH: 240 }, // Template 1
-            3: { userImg: null, imgX: 420, imgY: 660, imgW: 220, imgH: 240 }  // Template 2
+            2: { text: "HisNHerFlames", font: "Segoe UI", color: "#00f3ff", glow: "glow", angle: 0, alpha: 1.0, size: 32, textX: 575, textY: 760 },
+            3: { userImg: null, imgX: 420, imgY: 660, imgW: 220, imgH: 240 }
         };
 
         function getActiveTargetBox() {
             if (currentStage === 3) {
-                return { x: 420, y: 660, w: 220, h: 240 }; // Template 2 Arrow Center
+                return { x: 420, y: 660, w: 220, h: 240 }; // Template 2 Box
             }
-            return { x: 575, y: 760, w: 220, h: 240 }; // Template 1 Arrow Center
+            return { x: 575, y: 760, w: 220, h: 240 }; // Template 1 Box
         }
 
         let isBoxLocked = true;
         let isDraggingImage = false;
         let isDraggingBox = false;
+        let isDraggingText = false;
         let startX, startY;
         let isSnapped = false;
         let isOutOfBounds = false;
@@ -568,57 +757,67 @@
         const stageBox = document.getElementById('stageBox');
         const controlPanel = document.getElementById('controlPanel');
         const navTabs = document.getElementById('navTabs');
+        const topActionBar = document.getElementById('topActionBar');
+        const modeBanner = document.getElementById('modeBanner');
         const videoThankYou = document.getElementById('videoThankYou');
         const legalTicker = document.getElementById('legalTicker');
 
-        // Web Audio API & Ambient Holiday Music Synthesizer
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playAmbientHolidayMusic() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
+            if (isAudioMuted || audioCtx.state === 'suspended') return;
             const chordFrequencies = [
-                [261.63, 329.63, 392.00], // C major
-                [220.00, 261.63, 329.63], // A minor
-                [174.61, 220.00, 261.63], // F major
-                [196.00, 246.94, 293.66]  // G major
+                [261.63, 329.63, 392.00],
+                [220.00, 261.63, 329.63],
+                [174.61, 220.00, 261.63],
+                [196.00, 246.94, 293.66]
             ];
-            
             let chordIndex = 0;
-
             function playChord() {
-                if (audioCtx.state === 'closed') return;
+                if (isAudioMuted || audioCtx.state === 'closed') return;
                 const notes = chordFrequencies[chordIndex];
                 chordIndex = (chordIndex + 1) % chordFrequencies.length;
-
                 notes.forEach(freq => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
-                    
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
                     gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
                     gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 1.5);
                     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 5.5);
-
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
-
                     osc.start(audioCtx.currentTime);
                     osc.stop(audioCtx.currentTime + 6.0);
                 });
-
                 setTimeout(playChord, 5000);
             }
-
             playChord();
         }
 
+        function toggleAudioMute() {
+            isAudioMuted = !isAudioMuted;
+            const btn = document.getElementById('audioMuteBtn');
+            if (isAudioMuted) {
+                btn.innerText = "🔇 Audio: OFF";
+                btn.style.borderColor = "#ff2a85";
+                btn.style.color = "#ff2a85";
+            } else {
+                btn.innerText = "🔊 Audio: ON";
+                btn.style.borderColor = "var(--neon-cyan)";
+                btn.style.color = "#fff";
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playAmbientHolidayMusic(); // Instantly restart music loop when unmuted
+            }
+        }
+        window.toggleAudioMute = toggleAudioMute;
+
         function playCoinSound() {
+            if (isAudioMuted) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             [987.77, 1318.51].forEach((freq, idx) => {
                 setTimeout(() => {
+                    if (isAudioMuted) return;
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = 'sine';
@@ -634,6 +833,7 @@
         }
 
         function playSnapPop() {
+            if (isAudioMuted) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -648,25 +848,32 @@
             osc.stop(audioCtx.currentTime + 0.08);
         }
 
-        function playWarningBuzz() {
+        function playSoftWarningTone() {
+            if (isAudioMuted) return;
+            let now = Date.now();
+            if (now - lastWarningTime < 1800) return;
+            lastWarningTime = now;
+
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-            osc.frequency.setValueAtTime(90, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.12);
+            osc.stop(audioCtx.currentTime + 0.2);
         }
 
         function playVictoryChime() {
+            if (isAudioMuted) return;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
                 setTimeout(() => {
+                    if (isAudioMuted) return;
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
@@ -690,19 +897,43 @@
         }
 
         function startDesigning() {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             playCoinSound();
             playAmbientHolidayMusic();
             coverContainer.classList.add('hidden');
             stageBox.classList.remove('hidden');
             controlPanel.classList.remove('hidden');
             navTabs.classList.remove('hidden');
+            topActionBar.classList.remove('hidden');
             switchStage(1);
         }
 
         document.getElementById('startBtn').addEventListener('click', startDesigning);
+
+        function resetDraft() {
+            playCoinSound();
+            templateState[2].text = "HisNHerFlames";
+            templateState[2].angle = 0;
+            templateState[2].size = 32;
+            templateState[2].alpha = 1.0;
+            templateState[3].userImg = null;
+            switchStage(2);
+        }
+        window.resetDraft = resetDraft;
+
+        function toggleCombineShowcase() {
+            combineShowcaseEnabled = !combineShowcaseEnabled;
+            const btn = document.getElementById('combineToggleBtn');
+            if (combineShowcaseEnabled) {
+                btn.className = "toggle-btn-combine active-combine";
+                btn.innerText = "⚡ Combined Text + Image Preview: ENABLED";
+            } else {
+                btn.className = "toggle-btn-combine";
+                btn.innerText = "⚡ Combined Text + Image Preview: DISABLED";
+            }
+            playCoinSound();
+        }
+        window.toggleCombineShowcase = toggleCombineShowcase;
 
         function mainLoop() {
             pulseTimer += 0.05;
@@ -723,8 +954,8 @@
                     ctx.drawImage(loadedImages[bgKey], 0, 0, canvas.width, canvas.height);
                 }
 
-                if (currentStage >= 2 && templateState[currentStage]) {
-                    let st = templateState[currentStage];
+                if (currentStage === 3 && templateState[3]) {
+                    let st = templateState[3];
                     if (st.userImg && st.userImg.complete) {
                         ctx.save();
                         let trailGlow = isSnapped ? 20 : (isOutOfBounds ? 15 : 8);
@@ -735,46 +966,89 @@
                     }
                 }
 
+                if (currentStage === 2 && templateState[2]) {
+                    let st = templateState[2];
+                    if (st.text && st.text.trim() !== "") {
+                        ctx.save();
+                        ctx.globalAlpha = st.alpha;
+                        ctx.font = `bold ${st.size}px "${st.font}", sans-serif`;
+                        ctx.fillStyle = st.color;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        if (st.glow === 'glow') {
+                            ctx.shadowColor = isOutOfBounds ? '#ff2a85' : (st.color === '#000000' ? '#00f3ff' : st.color);
+                            ctx.shadowBlur = isOutOfBounds ? 22 : 15;
+                        } else {
+                            ctx.shadowBlur = 0;
+                        }
+
+                        ctx.translate(st.textX, st.textY);
+                        ctx.rotate((st.angle * Math.PI) / 180);
+                        ctx.fillText(st.text, 0, 0);
+                        ctx.restore();
+                    }
+                }
+
                 if (currentStage >= 2) {
-                    renderGuideArrows();
+                    renderBoxBoundaryGuides();
                 }
             }
 
             requestAnimationFrame(mainLoop);
         }
 
-        // Render Synced Guide Arrows
-        function renderGuideArrows() {
+        // Render 4-Way Box Boundary Guide Arrows at original positions
+        function renderBoxBoundaryGuides() {
             ctx.save();
             let arrowPulse = 5 + Math.sin(pulseTimer * 4) * 4;
-            ctx.strokeStyle = '#00f3ff';
-            ctx.fillStyle = '#00f3ff';
+            ctx.strokeStyle = isOutOfBounds ? '#ff2a85' : '#00f3ff';
+            ctx.fillStyle = isOutOfBounds ? '#ff2a85' : '#00f3ff';
             ctx.lineWidth = 3;
-            ctx.shadowColor = '#00f3ff';
+            ctx.shadowColor = isOutOfBounds ? '#ff2a85' : '#00f3ff';
             ctx.shadowBlur = 10;
 
             let targetBox = getActiveTargetBox();
-            let targetX = targetBox.x;
-            let targetY = targetBox.y;
+            let tx = targetBox.x;
+            let ty = targetBox.y;
+            let bw = targetBox.w;
             let bh = targetBox.h;
-            let offset = 18 + arrowPulse;
+            let offset = 14 + arrowPulse;
 
-            // Top Arrow pointing Down
+            // Top Arrow
             ctx.beginPath();
-            ctx.moveTo(targetX, targetY - bh/2 - offset - 10);
-            ctx.lineTo(targetX, targetY - bh/2 - offset);
-            ctx.moveTo(targetX - 6, targetY - bh/2 - offset - 6);
-            ctx.lineTo(targetX, targetY - bh/2 - offset);
-            ctx.lineTo(targetX + 6, targetY - bh/2 - offset - 6);
+            ctx.moveTo(tx, ty - bh/2 - offset - 8);
+            ctx.lineTo(tx, ty - bh/2 - offset);
+            ctx.moveTo(tx - 5, ty - bh/2 - offset - 5);
+            ctx.lineTo(tx, ty - bh/2 - offset);
+            ctx.lineTo(tx + 5, ty - bh/2 - offset - 5);
             ctx.stroke();
 
-            // Bottom Arrow pointing Up
+            // Bottom Arrow
             ctx.beginPath();
-            ctx.moveTo(targetX, targetY + bh/2 + offset + 10);
-            ctx.lineTo(targetX, targetY + bh/2 + offset);
-            ctx.moveTo(targetX - 6, targetY + bh/2 + offset + 6);
-            ctx.lineTo(targetX, targetY + bh/2 + offset);
-            ctx.lineTo(targetX + 6, targetY + bh/2 + offset + 6);
+            ctx.moveTo(tx, ty + bh/2 + offset + 8);
+            ctx.lineTo(tx, ty + bh/2 + offset);
+            ctx.moveTo(tx - 5, ty + bh/2 + offset + 5);
+            ctx.lineTo(tx, ty + bh/2 + offset);
+            ctx.lineTo(tx + 5, ty + bh/2 + offset + 5);
+            ctx.stroke();
+
+            // Left Arrow
+            ctx.beginPath();
+            ctx.moveTo(tx - bw/2 - offset - 8, ty);
+            ctx.lineTo(tx - bw/2 - offset, ty);
+            ctx.moveTo(tx - bw/2 - offset - 5, ty - 5);
+            ctx.lineTo(tx - bw/2 - offset, ty);
+            ctx.lineTo(tx - bw/2 - offset - 5, ty + 5);
+            ctx.stroke();
+
+            // Right Arrow
+            ctx.beginPath();
+            ctx.moveTo(tx + bw/2 + offset + 8, ty);
+            ctx.lineTo(tx + bw/2 + offset, ty);
+            ctx.moveTo(tx + bw/2 + offset + 5, ty - 5);
+            ctx.lineTo(tx + bw/2 + offset, ty);
+            ctx.lineTo(tx + bw/2 + offset + 5, ty + 5);
             ctx.stroke();
 
             ctx.restore();
@@ -847,18 +1121,35 @@
             ctx.fillStyle = '#111122';
             ctx.fillRect(bodyX, bodyY, bodyW, bodyH);
 
-            let activeUserImg = (templateState[2] && templateState[2].userImg) ? templateState[2].userImg : 
-                              ((templateState[3] && templateState[3].userImg) ? templateState[3].userImg : null);
+            let imgSt = templateState[3];
+            let textSt = templateState[2];
 
-            if (activeUserImg && activeUserImg.complete) {
-                ctx.drawImage(activeUserImg, bodyX, bodyY, bodyW, bodyH);
-            } else {
+            if (imgSt && imgSt.userImg && imgSt.userImg.complete) {
+                ctx.drawImage(imgSt.userImg, bodyX, bodyY, bodyW, bodyH);
+            } else if (!combineShowcaseEnabled || !textSt.text) {
                 ctx.fillStyle = 'rgba(255, 42, 133, 0.2)';
                 ctx.fillRect(bodyX, bodyY, bodyW, bodyH);
                 ctx.fillStyle = '#00f3ff';
                 ctx.font = 'bold 20px "Segoe UI"';
                 ctx.textAlign = 'center';
                 ctx.fillText('✨ YOUR CUSTOM WRAP ✨', 0, bodyY + bodyH / 2);
+            }
+
+            if (combineShowcaseEnabled && textSt && textSt.text && textSt.text.trim() !== "") {
+                ctx.save();
+                ctx.globalAlpha = textSt.alpha;
+                ctx.font = `bold ${textSt.size}px "${textSt.font}", sans-serif`;
+                ctx.fillStyle = textSt.color;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                if (textSt.glow === 'glow') {
+                    ctx.shadowColor = textSt.color === '#000000' ? '#00f3ff' : textSt.color;
+                    ctx.shadowBlur = 15;
+                }
+                ctx.translate(0, 35);
+                ctx.rotate((textSt.angle * Math.PI) / 180);
+                ctx.fillText(textSt.text, 0, 0);
+                ctx.restore();
             }
 
             let cylGrad = ctx.createLinearGradient(bodyX, 0, bodyX + bodyW, 0);
@@ -947,17 +1238,35 @@
                 btn.classList.toggle('active', (idx + 1) === stageIdx);
             });
 
-            if (templateState[currentStage]) {
-                let st = templateState[currentStage];
+            const imgRow = document.getElementById('imageUploadRow');
+            const textControls = document.getElementById('textCustomizerBox');
+            const wSlider = document.getElementById('widthSliderGroup');
+            const hSlider = document.getElementById('heightSliderGroup');
+            const editorControls = document.getElementById('editorControlsRow');
+
+            if (currentStage === 2 && templateState[2]) {
+                modeBanner.innerText = "✍️ Template 1: Text Only Studio";
+                let st = templateState[2];
+                document.getElementById('customTextInput').value = st.text;
+                document.getElementById('fontFamilySelect').value = st.font;
+                document.getElementById('fontColorSelect').value = st.color;
+                document.getElementById('fontGlowSelect').value = st.glow;
+                document.getElementById('fontSizeSlider').value = st.size;
+                document.getElementById('textAngleSlider').value = st.angle;
+                document.getElementById('textAlphaSlider').value = Math.round(st.alpha * 100);
+                document.getElementById('textSzVal').innerText = (st.size / 80).toFixed(1) + '"';
+                document.getElementById('textAngleVal').innerText = st.angle + '°';
+                document.getElementById('textAlphaVal').innerText = Math.round(st.alpha * 100) + '%';
+                checkBounds();
+            } else if (currentStage === 3 && templateState[3]) {
+                modeBanner.innerText = "🖼️ Template 2: Image Only Studio";
+                let st = templateState[3];
                 document.getElementById('imgWidthSlider').value = st.imgW;
                 document.getElementById('imgHeightSlider').value = st.imgH;
                 document.getElementById('imgWVal').innerText = (st.imgW / 88).toFixed(1) + '"';
                 document.getElementById('imgHVal').innerText = (st.imgH / 88).toFixed(1) + '"';
+                checkBounds();
             }
-
-            const editorControls = document.getElementById('editorControlsRow');
-            const wSlider = document.getElementById('widthSliderGroup');
-            const hSlider = document.getElementById('heightSliderGroup');
 
             if (currentStage === 5) {
                 inchHud.classList.add('hidden');
@@ -965,8 +1274,10 @@
                 video.style.display = 'block';
                 video.play();
                 videoThankYou.style.display = 'block';
-                legalTicker.style.display = 'block'; // Ticker active on Closing (Stage 5)
+                legalTicker.style.display = 'block';
                 editorControls.style.display = 'none';
+                textControls.style.display = 'none';
+                imgRow.style.display = 'none';
                 wSlider.style.display = 'none';
                 hSlider.style.display = 'none';
                 playVictoryChime();
@@ -974,8 +1285,10 @@
                 inchHud.classList.add('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
-                legalTicker.style.display = 'block'; // Ticker active on BIC Preview (Stage 4)
+                legalTicker.style.display = 'block';
                 editorControls.style.display = 'none';
+                textControls.style.display = 'none';
+                imgRow.style.display = 'none';
                 wSlider.style.display = 'none';
                 hSlider.style.display = 'none';
                 playCoinSound();
@@ -983,26 +1296,32 @@
                 inchHud.classList.remove('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
-                legalTicker.style.display = 'block'; // Ticker starts right here on Template 2 (Stage 3)!
+                legalTicker.style.display = 'block';
                 editorControls.style.display = 'flex';
+                imgRow.style.display = 'flex';
+                textControls.style.display = 'none';
                 wSlider.style.display = 'block';
                 hSlider.style.display = 'block';
             } else if (currentStage === 2) {
                 inchHud.classList.remove('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
-                legalTicker.style.display = 'none'; // Template 1 (Stage 2)
+                legalTicker.style.display = 'none';
                 editorControls.style.display = 'flex';
-                wSlider.style.display = 'block';
-                hSlider.style.display = 'block';
+                imgRow.style.display = 'none';
+                textControls.style.display = 'block';
+                wSlider.style.display = 'none';
+                hSlider.style.display = 'none';
             } else {
                 inchHud.classList.add('hidden');
                 canvas.style.display = 'block';
                 video.style.display = 'none';
-                legalTicker.style.display = 'none'; // Example (Stage 1)
+                legalTicker.style.display = 'none';
                 editorControls.style.display = 'flex';
-                wSlider.style.display = 'block';
-                hSlider.style.display = 'block';
+                imgRow.style.display = 'none';
+                textControls.style.display = 'none';
+                wSlider.style.display = 'none';
+                hSlider.style.display = 'none';
             }
         }
         window.switchStage = switchStage;
@@ -1014,12 +1333,59 @@
         }
         window.nextStage = nextStage;
 
+        function updateCustomText(val) {
+            if (templateState[2]) templateState[2].text = val;
+        }
+        window.updateCustomText = updateCustomText;
+
+        function updateFontFamily(val) {
+            if (templateState[2]) templateState[2].font = val;
+        }
+        window.updateFontFamily = updateFontFamily;
+
+        function updateFontColor(val) {
+            if (templateState[2]) templateState[2].color = val;
+        }
+        window.updateFontColor = updateFontColor;
+
+        function updateFontGlow(val) {
+            if (templateState[2]) templateState[2].glow = val;
+        }
+        window.updateFontGlow = updateFontGlow;
+
+        function updateTextAngle(val) {
+            if (templateState[2]) {
+                templateState[2].angle = parseInt(val);
+                document.getElementById('textAngleVal').innerText = val + '°';
+                checkBounds();
+            }
+        }
+        window.updateTextAngle = updateTextAngle;
+
+        function updateFontSize(val) {
+            if (templateState[2]) {
+                templateState[2].size = parseInt(val);
+                let inches = (parseInt(val) / 80).toFixed(1);
+                document.getElementById('textSzVal').innerText = inches + '"';
+                checkBounds();
+            }
+        }
+        window.updateFontSize = updateFontSize;
+
+        function updateTextAlpha(val) {
+            if (templateState[2]) {
+                templateState[2].alpha = parseInt(val) / 100;
+                document.getElementById('textAlphaVal').innerText = val + '%';
+            }
+        }
+        window.updateTextAlpha = updateTextAlpha;
+
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file && templateState[currentStage]) {
+            if (file && templateState[3]) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    let st = templateState[currentStage];
+                    let st = templateState[3];
                     st.userImg = new Image();
                     st.userImg.onload = function() {
                         let targetBox = getActiveTargetBox();
@@ -1039,8 +1405,8 @@
         });
 
         function updateImageWidth(val) {
-            if (templateState[currentStage]) {
-                let st = templateState[currentStage];
+            if (templateState[3]) {
+                let st = templateState[3];
                 st.imgW = parseInt(val);
                 let inchesW = (st.imgW / 88).toFixed(1);
                 document.getElementById('imgWVal').innerText = inchesW + '"';
@@ -1050,8 +1416,8 @@
         window.updateImageWidth = updateImageWidth;
 
         function updateImageHeight(val) {
-            if (templateState[currentStage]) {
-                let st = templateState[currentStage];
+            if (templateState[3]) {
+                let st = templateState[3];
                 st.imgH = parseInt(val);
                 let inchesH = (st.imgH / 88).toFixed(1);
                 document.getElementById('imgHVal').innerText = inchesH + '"';
@@ -1060,33 +1426,54 @@
         }
         window.updateImageHeight = updateImageHeight;
 
+        // Rubber-band soft warning check using original coordinates
         function checkBounds() {
-            if (!templateState[currentStage]) return;
-            let st = templateState[currentStage];
             let targetBox = getActiveTargetBox();
-            let iw = (st.imgW / 88).toFixed(1);
-            let ih = (st.imgH / 88).toFixed(1);
-            document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
+            
+            if (currentStage === 3 && templateState[3]) {
+                let st = templateState[3];
+                let iw = (st.imgW / 88).toFixed(1);
+                let ih = (st.imgH / 88).toFixed(1);
+                document.getElementById('hudDims').innerText = iw + '" × ' + ih + '"';
 
-            let dist = Math.hypot(st.imgX - targetBox.x, st.imgY - targetBox.y);
-            if (dist < 40) {
-                if (!isSnapped) {
-                    playSnapPop();
-                    isSnapped = true;
+                let dist = Math.hypot(st.imgX - targetBox.x, st.imgY - targetBox.y);
+                if (dist < 45) {
+                    if (!isSnapped) { playSnapPop(); isSnapped = true; }
+                    isOutOfBounds = false;
+                    inchHud.className = 'inch-hud target-met';
+                    stageBox.classList.remove('out-of-bounds-flash');
+                } else if (Math.abs(st.imgX - targetBox.x) > 110 || Math.abs(st.imgY - targetBox.y) > 160) {
+                    if (!isOutOfBounds) { playSoftWarningTone(); isOutOfBounds = true; }
+                    inchHud.className = 'inch-hud out-of-bounds';
+                    stageBox.classList.add('out-of-bounds-flash');
+                } else {
+                    isSnapped = false;
+                    isOutOfBounds = false;
+                    inchHud.className = 'inch-hud';
+                    stageBox.classList.remove('out-of-bounds-flash');
                 }
-                isOutOfBounds = false;
-                inchHud.className = 'inch-hud target-met';
-            } else if (st.imgX < 100 || st.imgX > 740 || st.imgY < 100 || st.imgY > 1020) {
-                if (!isOutOfBounds) {
-                    playWarningBuzz();
-                    isOutOfBounds = true;
+            } else if (currentStage === 2 && templateState[2]) {
+                let st = templateState[2];
+                let textInch = (st.size / 80).toFixed(1);
+                document.getElementById('hudDims').innerText = textInch + '" Font Scale';
+
+                let distText = Math.hypot(st.textX - targetBox.x, st.textY - targetBox.y);
+                if (distText < 45) {
+                    if (!isSnapped) { playSnapPop(); isSnapped = true; }
+                    isOutOfBounds = false;
+                    inchHud.className = 'inch-hud target-met';
+                    stageBox.classList.remove('out-of-bounds-flash');
+                } else if (Math.abs(st.textX - targetBox.x) > 110 || Math.abs(st.textY - targetBox.y) > 160) {
+                    if (!isOutOfBounds) { playSoftWarningTone(); isOutOfBounds = true; }
+                    isOutOfBounds = false;
+                    inchHud.className = 'inch-hud out-of-bounds';
+                    stageBox.classList.add('out-of-bounds-flash');
+                } else {
+                    isSnapped = false;
+                    isOutOfBounds = false;
+                    inchHud.className = 'inch-hud';
+                    stageBox.classList.remove('out-of-bounds-flash');
                 }
-                isSnapped = false;
-                inchHud.className = 'inch-hud out-of-bounds';
-            } else {
-                isSnapped = false;
-                isOutOfBounds = false;
-                inchHud.className = 'inch-hud';
             }
         }
 
@@ -1099,25 +1486,29 @@
         window.toggleBoxLock = toggleBoxLock;
 
         canvas.addEventListener('mousedown', (e) => {
-            if (!templateState[currentStage]) return;
             const rect = canvas.getBoundingClientRect();
             const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
             const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
             let targetBox = getActiveTargetBox();
 
-            if (!isBoxLocked && Math.abs(mouseX - targetBox.x) < targetBox.w/2 && Math.abs(mouseY - targetBox.y) < targetBox.h/2) {
-                isDraggingBox = true;
-            } else {
-                isDraggingImage = true;
+            if (currentStage === 2 && templateState[2]) {
+                let st = templateState[2];
+                if (Math.hypot(mouseX - st.textX, mouseY - st.textY) < 120) {
+                    isDraggingText = true;
+                }
+            } else if (currentStage === 3 && templateState[3]) {
+                if (!isBoxLocked && Math.abs(mouseX - targetBox.x) < targetBox.w/2 && Math.abs(mouseY - targetBox.y) < targetBox.h/2) {
+                    isDraggingBox = true;
+                } else {
+                    isDraggingImage = true;
+                }
             }
             startX = mouseX;
             startY = mouseY;
         });
 
         window.addEventListener('mousemove', (e) => {
-            if (!isDraggingImage && !isDraggingBox) return;
-            if (!templateState[currentStage]) return;
-            let st = templateState[currentStage];
+            if (!isDraggingImage && !isDraggingBox && !isDraggingText) return;
             const rect = canvas.getBoundingClientRect();
             const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
             const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
@@ -1126,12 +1517,16 @@
 
             let targetBox = getActiveTargetBox();
 
-            if (isDraggingBox) {
+            if (isDraggingText && templateState[2]) {
+                templateState[2].textX += dx;
+                templateState[2].textY += dy;
+                checkBounds();
+            } else if (isDraggingBox) {
                 targetBox.x += dx;
                 targetBox.y += dy;
-            } else if (isDraggingImage) {
-                st.imgX += dx;
-                st.imgY += dy;
+            } else if (isDraggingImage && templateState[3]) {
+                templateState[3].imgX += dx;
+                templateState[3].imgY += dy;
                 checkBounds();
             }
             startX = mouseX;
@@ -1139,17 +1534,27 @@
         });
 
         window.addEventListener('mouseup', () => {
-            if (!templateState[currentStage]) return;
-            let st = templateState[currentStage];
             let targetBox = getActiveTargetBox();
-            if (isDraggingImage && Math.hypot(st.imgX - targetBox.x, st.imgY - targetBox.y) < 30) {
-                st.imgX = targetBox.x;
-                st.imgY = targetBox.y;
-                playSnapPop();
-                isSnapped = true;
+            if (currentStage === 3 && templateState[3]) {
+                let st = templateState[3];
+                if (isDraggingImage && Math.hypot(st.imgX - targetBox.x, st.imgY - targetBox.y) < 40) {
+                    st.imgX = targetBox.x;
+                    st.imgY = targetBox.y;
+                    playSnapPop();
+                    isSnapped = true;
+                }
+            } else if (currentStage === 2 && templateState[2]) {
+                let st = templateState[2];
+                if (isDraggingText && Math.hypot(st.textX - targetBox.x, st.textY - targetBox.y) < 40) {
+                    st.textX = targetBox.x;
+                    st.textY = targetBox.y;
+                    playSnapPop();
+                    isSnapped = true;
+                }
             }
             isDraggingImage = false;
             isDraggingBox = false;
+            isDraggingText = false;
         });
 
         function openOrderModal() { document.getElementById('orderModal').style.display = 'flex'; }
